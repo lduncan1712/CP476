@@ -2,3 +2,4 @@ id, name
 1,  DEBIT
 2,  CREDIT
 3,  TRANSFER (For Later)
+4,  SCEDULED? (For Later)
