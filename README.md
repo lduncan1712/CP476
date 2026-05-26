@@ -11,7 +11,7 @@
 ### Stack:
 - Container: Docker      (Verbally Approved)
 - Frontend:  React       (Chapter 11)
-- Backend:   PHP/Node    (Chapter 12,13)   (TBD)
+- Backend:   PHP
 - Database:  Postgres    (Verbally Approved)
 
 ## SETUP (Windows)
