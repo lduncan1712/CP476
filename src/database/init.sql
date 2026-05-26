@@ -73,9 +73,7 @@ CREATE TABLE IF NOT EXISTS goals(
     balance                DECIMAL(10, 2) NOT NULL,
     goal_date              DATE NOT NULL,
 
-    FOREIGN KEY (user_id) REFERENCES users(id),
-
-    CONSTRAINT goal_future CHECK (goal_date >= CURRENT_DATE)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 
@@ -109,12 +107,17 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION transaction_updates_user()
 RETURNS TRIGGER AS $$
 BEGIN
-    UPDATE users
-    SET 
-        updated_on = CURRENT_DATE,
-        current_to = GREATEST(current_to, NEW.transaction_date)
-    WHERE id = NEW.user_id;
-    RETURN NEW;
+    IF TG_OP = 'DELETE' THEN
+        UPDATE users SET updated_on = CURRENT_DATE WHERE id = OLD.user_id;
+        RETURN OLD;
+    ELSE
+        UPDATE users
+        SET
+            updated_on = CURRENT_DATE,
+            current_to = GREATEST(current_to, NEW.transaction_date)
+        WHERE id = NEW.user_id;
+        RETURN NEW;
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
