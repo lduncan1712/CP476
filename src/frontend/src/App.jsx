@@ -1,3 +1,15 @@
+import { useState } from 'react'
+
+//PAGES
+import Login from './pages/Login'
+import MainPage from './pages/MainPage'
+
 export default function App() {
-  return <p>Imma Example Template To Be Added To</p>
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  if (!loggedIn) {
+    return <Login onLogin={() => setLoggedIn(true)} />
+  }
+
+  return <MainPage />
 }
