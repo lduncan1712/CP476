@@ -1,1 +1,92 @@
+# Wiki & Group Meeting Notes
+Our group has been meeting weekly after Tuesday class. The summary of these meetings is recorded below.
+
+## Tuesday May 12th, 2026 (1 hour)
+##### Minutes:
+- Decided on the topic based on a vote.
+- Brainstormed some project requirements.
+- Gracie Heer nominated as team leader.
+- Weekly meeting schedule set.
+
+##### Important decisions:
+- We decided that we will build the budget app with the following technologies, all running in a Docker container:
+    - Database: Postgres SQL
+    - Backend: PHP
+    - Frontend: React
+
+## Thursday, May 14th, 2026 (30 minutes)
+##### Minutes:
+- The group was split up into 3 teams **(Proposal team, wireframes team, and data planning team)**
+- Everyone (regardless of team) is responsible for working on the user stories.
+- Team plan to be handled by group leader (Gracie Heer)
+- Github setup done by Lucas Duncan.
+- Wiki to be maintained by Charlie Carter.
+- Discussions around acceptance criteria began
+- Went through the requirements we all made over the past 2 days, and decided on green (must have) and yellow (Nice to have).
+- Yusra made a shared Figma for Wireframes
+##### Team building:
+- Softball talk.
+##### Milestone 1 Teams:
+| Project Proposal | Wireframes     | Data Planning     |
+|------------------|----------------|-------------------|
+| Owen Macgowan    | Charlie Carter | Lucas Duncan      |
+| Adam Bondi       | Yursa Hassan   | Jordan Franschman |
+| Gracie Heer      | Jamie Beatty   |                   |
+| Evan Parisotto   | Janaki Patel   |                   |
+
+
+
+## Tuesday, May 19th, 2026 (30 minutes)
+##### Minutes:
+- Initial, high level user stories were discussed. These need to be broken down into smaller, more detailed user stories.
+- Laying out the initial website page designs on paper to support the wireframe team
+- Discussed the bare minimum of functionalities.
+##### Team building:
+- Discussed our long weekends. Lucas trimmed the flowers.
+
+### Tuesday, May 26th, 2026 (30 minutes)
+##### Minutes:
+- Received updates from each subteam
+- **Wireframe team updates:**
+    - Added an overall budget view to landing page
+    - Landing page now includes:
+        - Overall spending
+        - Recent transactions
+        - Budgets close to being filled.
+    - Discussed buttons on each page, how users will move between the pages.
+- **Report/Proposal Team:**
+  Need to have finished user stories before they continue with the proposal. We looked through the wireframes to further refine the stories to match.
+- **Database Team:**
+    - Decided how much design we want done for first milestone
+    - Users, entities, key relationships.
+    - Tables: Will likely have 5-6 tables. 2-3 are support tables
+    - Preliminary tables:
+        - Users
+        - Entities (vendors you financially interact with, e.g. Sobeys, Amazon, Sporting Life, Nike)
+        - Transactions (money transfer)
+        - Budgets (How much you'd like to spend in a certain category over a given timeframe. I.e. \$150 for groceries this month, \$1200 in transportation this summer.)
+##### Team building:
+- Discussed weekends. Celebrated the birthdays shared yesterday. HBD Owen & Lucas 🎉
+
+## June 2nd, 2026 (30 minutes)
+##### Minutes:
+- Going through what we need to deliver on Friday
+- Subteam updates/status:
+    - **Project proposal:** Almost done
+    - **Wireframes:** Adding connections between screens and ui actions.
+    - **Database:**
+        - We decided that we aren't going to track the user's income (or "money in"). This is a budget app, are we are primarily concerned with tracking the user's spending.
+        - Fundamental entity: Transaction. Money spent by the user at a certain vendor (entity), on a certain date, in a certain category.
+            - People entities, and company entities → 1 side of the transaction
+            - Budget entities —> other side of the transaction.
+        - Budget table design: Users can either create a new budget for the month, or update the previous one.
+        - Database team will get started with scaffolding what the data looks like in the repo
+
+- **User stories**: finish the updated list
+    - Add difficulty rating for the user stories (based on Fibonacci sequence)
+    - Need to add priority to each user story
+
+- **Definition of Done**
+    - Gracie will create the "definition of done", in terms of finished parts of the web app
+    - Will check if features meet their acceptance criteria.
 
