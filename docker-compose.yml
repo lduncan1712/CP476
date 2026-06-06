@@ -9,6 +9,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./data/seed:/docker-entrypoint-initdb.d/seed
+      - ./data/test:/docker-entrypoint-initdb.d/test
 
   backend:
     build: ./src/backend
@@ -19,7 +20,7 @@ services:
     ports:
       - "8080:80"  ##80=PHP, 3000=NODE
     volumes:
-      - ./src/backend:/app
+      - ./src/backend:/var/www/html
     depends_on:
       - postgres
 
