@@ -2,6 +2,7 @@
 
 ## LINKS:
 ### [KANBAN](https://github.com/users/lduncan1712/projects/1/views/1)
+### See ./docs for [Wiki](./docs/WIKI.MD) and [Wireframes](./docs/FIGMA.MD) 
 
 
 ## DETAILS:
