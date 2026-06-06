@@ -1,5 +1,9 @@
 # CP476
 
+A simple budgeting app to keep your spending on track. This app organizes your transactions, 
+allows you set and monitor budgets, and provides analysis of your spending to help you reach
+your financial goals. 
+
 ## LINKS:
 ### [KANBAN](https://github.com/users/lduncan1712/projects/1/views/1)
 ### See ./docs for [Wiki](./docs/WIKI.MD) and [Wireframes](./docs/FIGMA.MD) 
