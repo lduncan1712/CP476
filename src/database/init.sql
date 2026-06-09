@@ -6,6 +6,12 @@ CREATE TYPE durations AS ENUM (
     'DECADE'
 );
 
+CREATE TABLE IF NOT EXISTS budget_durations(
+    id                     INTEGER PRIMARY KEY,
+    name                   VARCHAR(255) NOT NULL,
+    days                   INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS transaction_categories(
     id                     INTEGER PRIMARY KEY,
     name                   VARCHAR(255) NOT NULL
@@ -17,14 +23,14 @@ CREATE TABLE IF NOT EXISTS transaction_categories(
 CREATE TABLE IF NOT EXISTS users(
     id                     SERIAL PRIMARY KEY,
     name                   VARCHAR(255) NOT NULL,
-    created_on             DATE NOT NULL,
-    updated_on             DATE NOT NULL,
+    created_on             DATE NOT NULL DEFAULT CURRENT_DATE,
+    updated_on             DATE NOT NULL DEFAULT CURRENT_DATE,
     current_to             DATE
 );
 
 CREATE TABLE IF NOT EXISTS entities(
     id                     SERIAL PRIMARY KEY,
-    name                   VARCHAR(255) NOT NULL
+    name                   VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS transactions(
@@ -47,12 +53,13 @@ CREATE TABLE IF NOT EXISTS budgets(
     user_id                INTEGER NOT NULL,
     category_id            INTEGER,
     amount                 DECIMAL(10, 2) NOT NULL,
-    duration               durations NOT NULL,
+    duration_id            INTEGER NOT NULL,
     budget_start           DATE NOT NULL,
     budget_end             DATE,  
     
     FOREIGN KEY (user_id)     REFERENCES users(id),
     FOREIGN KEY (category_id) REFERENCES transaction_categories(id),
+    FOREIGN KEY (duration_id) REFERENCES budget_durations(id),
 
     CONSTRAINT budget_positive CHECK (amount > 0)
 );
@@ -113,3 +120,9 @@ CREATE OR REPLACE TRIGGER trg_transactions_update_user
 
 
 COPY transaction_categories (id, name) FROM '/docker-entrypoint-initdb.d/seed/transaction_categories.csv' WITH (FORMAT CSV, HEADER true);
+COPY budget_durations (id, name, days) FROM '/docker-entrypoint-initdb.d/seed/budget_durations.csv' WITH (FORMAT CSV, HEADER true);
+COPY users (id, name) FROM '/docker-entrypoint-initdb.d/test/users.csv' WITH (FORMAT CSV, HEADER true);
+COPY entities (id, name) FROM '/docker-entrypoint-initdb.d/test/entities.csv' WITH (FORMAT CSV, HEADER true);
+COPY transactions (category_id, user_id, entity_id, amount, transaction_date) FROM '/docker-entrypoint-initdb.d/test/transactions.csv' WITH (FORMAT CSV, HEADER true);
+
+SELECT setval('entities_id_seq', (SELECT MAX(id) FROM entities));
