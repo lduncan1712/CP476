@@ -126,3 +126,4 @@ COPY entities (id, name) FROM '/docker-entrypoint-initdb.d/test/entities.csv' WI
 COPY transactions (category_id, user_id, entity_id, amount, transaction_date) FROM '/docker-entrypoint-initdb.d/test/transactions.csv' WITH (FORMAT CSV, HEADER true);
 
 SELECT setval('entities_id_seq', (SELECT MAX(id) FROM entities));
+SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));

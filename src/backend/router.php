@@ -105,7 +105,16 @@ function route(): void {
                 case 'POST':respond_one(create_entity($db, $user_id, $body));
                 default: respond_error(405, "Method Not Allowed");
             }
-            break;        
+            break;
+        case '/users':
+            switch($method){
+                case 'GET':    respond_one(select_user($db, $user_id));
+                case 'POST':   respond_one(create_user($db, $body));
+                case 'PUT':    respond_one(update_user($db, $user_id, $body));
+                case 'DELETE': respond_one(delete_user($db, $user_id));
+                default: respond_error(405, "Method Not Allowed");
+            }
+            break;
         default: respond_error(404, "Path Not Found");
     }
 }

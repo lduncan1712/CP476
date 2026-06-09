@@ -32,6 +32,23 @@ function get_pairs(array $data): string{
 
 
 /**
+ * Validates That Required Fields Are Present + Non-Empty
+ * Responds 400 And Exits If Any Are Missing (Lightweight Guard)
+ *
+ * @param array $body
+ * @param array $required
+ * @return void
+ */
+function require_fields(array $body, array $required): void {
+    foreach ($required as $field) {
+        if (!isset($body[$field]) || trim((string)$body[$field]) === '') {
+            respond_error(400, "Missing Or Empty Required Field: $field");
+        }
+    }
+}
+
+
+/**
  * ==================================================
  *  ENDPOINTS BELOW
  * ==================================================
@@ -181,11 +198,98 @@ function select_entities(PDO $db, int $user_id, array $params): array {
 
     $statement = $db->prepare(
         "SELECT * FROM entities
-         WHERE 
+         WHERE
             (:name = '' OR name LIKE '%' || :name || '%') AND
             (:id = 0 OR :id = id)
          ORDER BY name"
     );
     $statement->execute($params);
     return $statement->fetchAll();
+}
+
+
+/**
+ * ==================================================
+ *  USER ENDPOINTS
+ * ==================================================
+ */
+
+/**
+ * Creates A New User (Sign Up)
+ *
+ * @param PDO $db
+ * @param array $body  expects { name }
+ * @return array|false
+ */
+function create_user(PDO $db, array $body): array|false {
+    require_fields($body, ['name']);
+
+    // Whitelist: Only Allow 'name', Ignore Any Other Submitted Columns (e.g. id, created_on)
+    $clean = ['name' => trim($body['name'])];
+
+    $statement = $db->prepare(
+        'INSERT INTO users' . get_cols($clean) .
+        'VALUES ' . get_params($clean) .
+        'RETURNING *'
+    );
+    $statement->execute($clean);
+    return $statement->fetch();
+}
+
+/**
+ * Selects The Currently Authenticated User's Own Record
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @return array|false
+ */
+function select_user(PDO $db, int $user_id): array|false {
+    $statement = $db->prepare(
+        'SELECT * FROM users WHERE id = :id'
+    );
+    $statement->execute(['id' => $user_id]);
+    return $statement->fetch();
+}
+
+/**
+ * Updates The Authenticated User's Own Record (Currently Just Name)
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $body  expects { name }
+ * @return array|false
+ */
+function update_user(PDO $db, int $user_id, array $body): array|false {
+    require_fields($body, ['name']);
+
+    // Whitelist The Editable Fields + Always Bump updated_on
+    $clean = [
+        'name'       => trim($body['name']),
+        'updated_on' => date('Y-m-d'),
+    ];
+
+    $statement = $db->prepare(
+        'UPDATE users SET ' . get_pairs($clean) . ' ' .
+        'WHERE id = :id
+        RETURNING *'
+    );
+    $clean['id'] = $user_id;
+    $statement->execute($clean);
+    return $statement->fetch();
+}
+
+/**
+ * Deletes The Authenticated User's Own Record
+ * NOTE: Will Fail (FK Constraint) If The User Still Has Transactions/Budgets
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @return array|false
+ */
+function delete_user(PDO $db, int $user_id): array|false {
+    $statement = $db->prepare(
+        'DELETE FROM users WHERE id = :id RETURNING *'
+    );
+    $statement->execute(['id' => $user_id]);
+    return $statement->fetch();
 }
