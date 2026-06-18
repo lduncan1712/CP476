@@ -12,12 +12,14 @@ export default function Budgets() {
   return (
     <div>
       <h2>Budgets</h2>
-      <h3>testing</h3>
       {budgets.map(b => (
         <p key={b.id}>
           ${b.amount} (category {b.category_id}) from {b.budget_start}
         </p>
       ))}
     </div>
+
+
+
   )
 }
