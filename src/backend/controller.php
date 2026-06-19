@@ -56,9 +56,17 @@ function require_fields(array $body, array $required): void {
 function create_transaction(PDO $db, int $user_id, array $body): array|false {
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
-        'INSERT INTO transactions' . get_cols($body) .
-        'VALUES ' . get_params($body) .
-        'RETURNING *'
+        'WITH row AS (
+            INSERT INTO transactions' . get_cols($body) .
+        '   VALUES ' . get_params($body) .
+        '   RETURNING *
+        )
+        SELECT row.*,
+               e.name  AS entity_name,
+               tc.name AS category_name
+        FROM row
+        LEFT JOIN entities               e  ON e.id  = row.entity_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $statement->execute($body);
     return $statement->fetch();
@@ -67,11 +75,19 @@ function create_transaction(PDO $db, int $user_id, array $body): array|false {
 function update_transaction(PDO $db, int $user_id, array $params, array $body): array|false
 {
     $statement = $db->prepare(
-        'UPDATE transactions SET ' . get_pairs($body) . ' ' .
-        'WHERE 
-            id = :id AND 
-            user_id = :user_id 
-        RETURNING *'
+        'WITH row AS (
+            UPDATE transactions SET ' . get_pairs($body) .
+        '   WHERE
+                id = :id AND
+                user_id = :user_id
+            RETURNING *
+        )
+        SELECT row.*,
+            e.name  AS entity_name,
+            tc.name AS category_name
+        FROM row
+        LEFT JOIN entities               e  ON e.id  = row.entity_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $body['user_id'] = $user_id;
     $body['id'] = $params['id'];
@@ -82,11 +98,19 @@ function update_transaction(PDO $db, int $user_id, array $params, array $body): 
 function delete_transaction(PDO $db, int $user_id, array $params): array|false
 {
     $statement = $db->prepare(
-        'DELETE FROM transactions
-         WHERE 
-            id = :id AND 
-            user_id = :user_id 
-        RETURNING *'
+        'WITH row AS (
+            DELETE FROM transactions
+            WHERE
+                id = :id AND
+                user_id = :user_id
+            RETURNING *
+        )
+        SELECT row.*,
+            e.name  AS entity_name,
+            tc.name AS category_name
+        FROM row
+        LEFT JOIN entities               e  ON e.id  = row.entity_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $params['user_id'] = $user_id;
     $statement->execute($params);
@@ -104,17 +128,22 @@ function select_transactions(PDO $db, int $user_id, array $params): array {
     $params['max']         = (float)($params['max']       ??  99999999.99);
 
     $statement = $db->prepare(
-        "SELECT * FROM transactions
+        "SELECT t.*,
+                e.name  AS entity_name,
+                tc.name AS category_name
+         FROM transactions t
+         LEFT JOIN entities               e  ON e.id  = t.entity_id
+         LEFT JOIN transaction_categories tc ON tc.id = t.category_id
          WHERE
-            (:id = 0 or id = :id) AND
-            user_id = :user_id AND
-            (:category_id = 0 OR category_id = :category_id) AND
-            (:start <= transaction_date) AND 
-            (:end   >= transaction_date) AND
-            (:min   <= amount) AND
-            (:max   >= amount) AND
-            (:entity_id = 0 OR entity_id = :entity_id)
-         ORDER BY transaction_date"
+            (:id = 0 OR t.id = :id) AND
+            t.user_id = :user_id AND
+            (:category_id = 0 OR t.category_id = :category_id) AND
+            (:start <= t.transaction_date) AND
+            (:end   >= t.transaction_date) AND
+            (:min   <= t.amount) AND
+            (:max   >= t.amount) AND
+            (:entity_id = 0 OR t.entity_id = :entity_id)
+         ORDER BY t.transaction_date"
     );
     $statement->execute($params);
     return $statement->fetchAll();
@@ -124,9 +153,17 @@ function create_budget(PDO $db, int $user_id, array $body): array|false
 {
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
-        'INSERT INTO budgets' . get_cols($body) .
-        'VALUES ' . get_params($body) .
-        'RETURNING *'
+        'WITH row AS (
+            INSERT INTO budgets' . get_cols($body) .
+        '   VALUES ' . get_params($body) .
+        '   RETURNING *
+        )
+        SELECT row.*,
+               bd.name AS duration_name,
+               tc.name AS category_name
+        FROM row
+        LEFT JOIN budget_durations       bd ON bd.id = row.duration_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $statement->execute($body);
     return $statement->fetch();
@@ -134,11 +171,19 @@ function create_budget(PDO $db, int $user_id, array $body): array|false
 
 function update_budget(PDO $db, int $user_id, array $params, array $body): array|false {
     $statement = $db->prepare(
-        'UPDATE budgets SET ' . get_pairs($body) . ' ' .
-        ' WHERE 
-            id = :id AND 
-            user_id = :user_id 
-        RETURNING *'
+        'WITH row AS (
+            UPDATE budgets SET ' . get_pairs($body) .
+        '   WHERE
+                id = :id AND
+                user_id = :user_id
+            RETURNING *
+        )
+        SELECT row.*,
+               bd.name AS duration_name,
+               tc.name AS category_name
+        FROM row
+        LEFT JOIN budget_durations       bd ON bd.id = row.duration_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $body['id'] = $params['id'];
     $body['user_id'] =  $user_id;
@@ -149,11 +194,19 @@ function update_budget(PDO $db, int $user_id, array $params, array $body): array
 function delete_budget(PDO $db, int $user_id, array $params): array|false
 {
     $statement = $db->prepare(
-        'DELETE FROM budgets
-         WHERE
-            id = :id AND
-            user_id = :user_id
-        RETURNING *'
+        'WITH row AS (
+            DELETE FROM budgets
+            WHERE
+                id = :id AND
+                user_id = :user_id
+            RETURNING *
+        )
+        SELECT row.*,
+               bd.name AS duration_name,
+               tc.name AS category_name
+        FROM row
+        LEFT JOIN budget_durations       bd ON bd.id = row.duration_id
+        LEFT JOIN transaction_categories tc ON tc.id = row.category_id'
     );
     $params['user_id'] = $user_id;
     $statement->execute($params);
