@@ -75,11 +75,11 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
     - **Project proposal:** Almost done
     - **Wireframes:** Adding connections between screens and ui actions.
     - **Database:**
-        - We decided that we aren't going to track the user's income (or "money in"). This is a budget app, are we are primarily concerned with tracking the user's spending.
+        - We decided that we aren't going to track the user's income (or "money in"). This is a budget app, and we are primarily concerned with tracking the user's spending.
         - Fundamental entity: Transaction. Money spent by the user at a certain vendor (entity), on a certain date, in a certain category.
             - People entities, and company entities → 1 side of the transaction
             - Budget entities —> other side of the transaction.
-        - Budget table design: Users can either create a new budget for the month, or update the previous one.
+        - Budget table design: Users can either create a new budget for the month or update the previous one.
         - Database team will get started with scaffolding what the data looks like in the repo
 
 - **User stories**: finish the updated list
@@ -90,3 +90,25 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
     - Gracie will create the "definition of done", in terms of finished parts of the web app
     - Will check if features meet their acceptance criteria.
 
+## June 9th, 2026 (30 minutes)
+##### Minutes:
+- Begin work on Milestone #2
+- **Front-end:** focus on front-end
+	- No connection to the back-end as of now.
+	- Change the sidebar design so there is room for other buttons/subpages.
+	- Use forms for user input (e.g., add budget).
+- **Back-end:** far enough along
+	- All endpoints required for the demo are done.
+	- Use endpoint and test data.
+	- Get started on user authentication (right now, only looking at user IDs).
+- **Database:** discuss any inconsistencies between "Milestone 1 Data planning" and repo "database init.sql"
+    - Discuss database schema quality & normalization - map out ER diagram.
+    - Ensure SQL correctness & clarity: CREATE statements run cleanly; data types/keys/constraints make sense.
+            
+- **Assign roles for milestone**: assigned tasks on Kanban
+    - Look at CP476B-S26 - Project Outline -> Milestone 02 – Front-End Implementation & Database Design -> Deliverables and Rubric
+    - Plan deliverables to be started and updated for the next meeting.
+
+- **Further team understanding working with GitHub and Docker**
+    - Push/pull requests, branches, committing, testing, approval, etc.
+    - Troubleshot Docker Desktop and linking with GitHub repo.
