@@ -41,5 +41,5 @@ http://localhost:3000
 ```
 Confirm the database has been setup and seeded properly with:
 ```
-docker exec -it cp476-postgres-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB}-c "SELECT * FROM transaction_categories;"
+docker exec -it cp476-main-postgres-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB}-c "SELECT * FROM transaction_categories;"
 ```
