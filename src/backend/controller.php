@@ -54,6 +54,7 @@ function require_fields(array $body, array $required): void {
  * ==================================================
  */
 function create_transaction(PDO $db, int $user_id, array $body): array|false {
+    require_fields($body, ['category_id', 'entity_id', 'amount', 'transaction_date']);
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -151,6 +152,7 @@ function select_transactions(PDO $db, int $user_id, array $params): array {
 
 function create_budget(PDO $db, int $user_id, array $body): array|false
 {
+    require_fields($body, ['category_id', 'duration_id', 'amount', 'budget_start']);
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -233,6 +235,7 @@ function select_budgets(PDO $db, int $user_id, array $params): array
 
 
 function create_entity(PDO $db, int $user_id, array $body): array|false {
+    require_fields($body, ['name']);
     $body['name'] = strtoupper($body['name']);
 
     $statement = $db->prepare(
