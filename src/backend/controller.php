@@ -48,12 +48,18 @@ function require_fields(array $body, array $required): void {
 }
 
 
+function whitelist(array $body, array $allowed): array {
+    return array_intersect_key($body, array_flip($allowed));
+}
+
+
 /**
  * ==================================================
  *  ENDPOINTS BELOW
  * ==================================================
  */
 function create_transaction(PDO $db, int $user_id, array $body): array|false {
+    $body = whitelist($body, ['category_id', 'entity_id', 'amount', 'transaction_date']);
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -74,6 +80,7 @@ function create_transaction(PDO $db, int $user_id, array $body): array|false {
 
 function update_transaction(PDO $db, int $user_id, array $params, array $body): array|false
 {
+    $body = whitelist($body, ['category_id', 'entity_id', 'amount', 'transaction_date']);
     $statement = $db->prepare(
         'WITH row AS (
             UPDATE transactions SET ' . get_pairs($body) .
@@ -151,6 +158,7 @@ function select_transactions(PDO $db, int $user_id, array $params): array {
 
 function create_budget(PDO $db, int $user_id, array $body): array|false
 {
+    $body = whitelist($body, ['category_id', 'duration_id', 'amount', 'budget_start', 'budget_end']);
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -170,6 +178,7 @@ function create_budget(PDO $db, int $user_id, array $body): array|false
 }
 
 function update_budget(PDO $db, int $user_id, array $params, array $body): array|false {
+    $body = whitelist($body, ['category_id', 'duration_id', 'amount', 'budget_start', 'budget_end']);
     $statement = $db->prepare(
         'WITH row AS (
             UPDATE budgets SET ' . get_pairs($body) .
@@ -233,6 +242,7 @@ function select_budgets(PDO $db, int $user_id, array $params): array
 
 
 function create_entity(PDO $db, int $user_id, array $body): array|false {
+    $body = whitelist($body, ['name']);
     $body['name'] = strtoupper($body['name']);
 
     $statement = $db->prepare(
@@ -277,8 +287,8 @@ function select_entities(PDO $db, int $user_id, array $params): array {
 function create_user(PDO $db, array $body): array|false {
     require_fields($body, ['name']);
 
-    // Whitelist: Only Allow 'name', Ignore Any Other Submitted Columns (e.g. id, created_on)
-    $clean = ['name' => trim($body['name'])];
+    $clean = whitelist($body, ['name']);
+    $clean['name'] = trim($clean['name']);
 
     $statement = $db->prepare(
         'INSERT INTO users' . get_cols($clean) .
@@ -315,11 +325,9 @@ function select_user(PDO $db, int $user_id): array|false {
 function update_user(PDO $db, int $user_id, array $body): array|false {
     require_fields($body, ['name']);
 
-    // Whitelist The Editable Fields + Always Bump updated_on
-    $clean = [
-        'name'       => trim($body['name']),
-        'updated_on' => date('Y-m-d'),
-    ];
+    $clean = whitelist($body, ['name']);
+    $clean['name'] = trim($clean['name']);
+    $clean['updated_on'] = date('Y-m-d');
 
     $statement = $db->prepare(
         'UPDATE users SET ' . get_pairs($clean) . ' ' .

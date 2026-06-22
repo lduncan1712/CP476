@@ -128,6 +128,18 @@ echo $(curl -s -X POST "$BASE_URL/users" \
     -H "$AUTH" \
     -d '{}')
 
+echo "POST TRANSACTION (inject id:999 -> whitelist should drop it, expect a different auto id): "
+echo $(curl -s -X POST "$BASE_URL/transactions" \
+    -H "$CONTENT" \
+    -H "$AUTH" \
+    -d '{
+        "category_id": 1,
+        "entity_id":   1,
+        "amount":  99,
+        "transaction_date": "2026-06-03",
+        "id": 999
+    }')
+
 
 
 
