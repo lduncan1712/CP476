@@ -70,7 +70,7 @@
 
 /* Active/disabled button */
 .main-page nav button:disabled {
-  opacity: 0.7;
+  opacity: 0.5;
   cursor: default;
 }
 
