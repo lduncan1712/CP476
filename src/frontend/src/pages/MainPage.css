@@ -25,3 +25,34 @@
 .main-page main {
   flex: 1;
 }
+
+/*Analytics CSS*/
+#analytics-title {
+  text-align: center;
+  font-size: 40px;
+  color:green;
+}
+
+.points {
+  font-size: 24px;
+}
+
+.analytics_card {
+	justify-content:space-between;
+	padding: 25px;
+	margin: 10px;
+  border-radius: 15px;
+	display:flex;
+
+  gap: 30px;
+  background: #ececec;
+  align-items: center;
+}
+
+.chart-overlay {
+  background-color: green;
+}
+
+.chart-no-overlay {
+  background-color: lightgrey;
+}
