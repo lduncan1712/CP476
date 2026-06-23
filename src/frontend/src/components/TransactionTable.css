@@ -1,0 +1,79 @@
+.transactions-table {
+  width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.transactions-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Inter, sans-serif;
+  font-size: 14px;
+  color: #213547;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16,24,40,0.04);
+}
+
+.transactions-table__table thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #334155;
+  background: #cfcfcf;
+}
+
+.transactions-table__table tbody td {
+  padding: 12px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f7fb;
+}
+
+.transactions-table__table tbody tr:nth-child(even) {
+  background: #cfcfcf;
+}
+
+.transactions-table__table tbody tr:hover {
+  background: #f1f6fb;
+}
+
+.transactions-table__table tbody tr:nth-child(even):hover {
+  background: #959595;
+}
+
+
+.transactions-table__table .actions {
+  width: 180px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background: #e6f7ff;
+  color: #075985;
+  border: 1px solid rgba(7,89,133,0.08);
+}
+
+.btn-edit:hover {
+  background: #d8f0ff;
+}
+
+.btn-delete {
+  background: #fff1f2;
+  color: #9b1c1c;
+  border: 1px solid rgba(155,28,28,0.08);
+}
+
+.btn-delete:hover {
+  background: #ffe6e8;
+}
+
