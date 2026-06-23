@@ -21,7 +21,7 @@ export default function MainPage() {
 
   return (
     <div className="main-page-wrapper">
-      <div className="top-bar"></div>
+      <div className="top-bar">The Budget App</div>
       <div className="main-page">
         <nav>
           {TABS.map((tab, i) => (
