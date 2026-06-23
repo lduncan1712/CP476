@@ -1,7 +1,7 @@
 # CP476
 
 A simple budgeting app to keep your spending on track. This app organizes your transactions, 
-allows you set and monitor budgets, and provides analysis of your spending to help you reach
+allows you to set and monitor budgets, and provides analysis of your spending to help you reach
 your financial goals. 
 
 ## LINKS:
@@ -17,7 +17,7 @@ your financial goals.
 - Container: Docker      (Verbally Approved)
 - Frontend:  React       (Chapter 11)
 - Backend:   PHP
-- Database:  Postgres    (Verbally Approved)
+- Database:  Postgres/PostgreSQL     (Verbally Approved)
 
 ## SETUP (Windows)
 
@@ -31,7 +31,7 @@ POSTGRES_DB=
 POSTGRES_USER=
 POSTGRES_PASSWORD=
 ```
-Build the docker container with:
+Build the Docker container with:
 ```
 docker compose up --build
 ```
@@ -41,5 +41,5 @@ http://localhost:3000
 ```
 Confirm the database has been setup and seeded properly with:
 ```
-docker exec -it cp476-postgres-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB}-c "SELECT * FROM transaction_categories;"
+docker exec -it cp476-main-postgres-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB}-c "SELECT * FROM transaction_categories;"
 ```
