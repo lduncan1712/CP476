@@ -1,11 +1,3 @@
-CREATE TYPE durations AS ENUM (
-    'DAILY',
-    'WEEKLY',
-    'MONTHLY',
-    'YEARLY',
-    'DECADE'
-);
-
 CREATE TABLE IF NOT EXISTS budget_durations(
     id                     INTEGER PRIMARY KEY,
     name                   VARCHAR(255) NOT NULL,
@@ -16,9 +8,6 @@ CREATE TABLE IF NOT EXISTS transaction_categories(
     id                     INTEGER PRIMARY KEY,
     name                   VARCHAR(255) NOT NULL
 );
-
-
-
 
 CREATE TABLE IF NOT EXISTS users(
     id                     SERIAL PRIMARY KEY,
@@ -66,13 +55,6 @@ CREATE TABLE IF NOT EXISTS budgets(
 
 
 
-
-
-
-
-
-
-
 CREATE OR REPLACE FUNCTION budget_updates_user()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -106,7 +88,6 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
-
 
 
 CREATE OR REPLACE TRIGGER trg_budgets_update_user
