@@ -51,8 +51,10 @@
 
 .chart-overlay {
   background-color: green;
+  color:white;
 }
 
 .chart-no-overlay {
   background-color: lightgrey;
+  color:black;
 }

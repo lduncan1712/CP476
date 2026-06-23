@@ -30,7 +30,7 @@ export default function Analytics() {
                 <div class = "card-content">
                     <h2>{now}</h2>
                     <button type="button" className={hasOverlay ? 'chart-no-overlay' : 'chart-overlay'} onClick={() => setOverlay(!hasOverlay)}>Compare with last month</button>
-                    <button type="button" onClick={() => setMonthview(!isMonthview)} style={{ backgroundColor: isMonthview ? 'lightgrey' : 'green', color: 'white' }}>Year-view</button>
+                    <button type="button" className={isMonthview ? 'chart-no-overlay' : 'chart-overlay'} onClick={() => setMonthview(!isMonthview)}>Year-view</button>
                     <div class = "points">
                         <ul>
                             <li>You have used up <strong>30%</strong> of your budget so far.</li>
@@ -43,8 +43,7 @@ export default function Analytics() {
             <article class = "analytics_card">
                 <figure id = "breakdown_chart">
                     <figcaption>Month Expense Breakdown By Category</figcaption>
-                    <img src={piechart} alt="Pie graph" style={{ width: '350px', height: '250px', display: 'block', margin: '10px auto' }}/>
-                    <canvas id="customLineChart" width="200" height="200"></canvas>
+                    <img src={piechart} alt="Pie graph" style={{ width: '400px', height: '250px', display: 'block', margin: '10px auto' }}/>
                 </figure>
                 <div class = "card-content">
                     <div class = "points">
@@ -64,5 +63,5 @@ export default function Analytics() {
       {*//* Clicking toggles the boolean state */}
       /*<button onClick={() => setIsFirstImage(!isFirstImage)}>
         Switch Image
-      </button>
+      </button>//                    <canvas id="customLineChart" width="200" height="200"></canvas>
 */
