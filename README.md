@@ -1,4 +1,4 @@
-# CP476 - Personal Expense Tracker (Option #5)
+# Personal Expense Tracker (Option #5)
 
 This project is a <strong>Budget Tracking Web App</strong>. It enables user to submit and organize transactions and budgets, to moniter and analyze spending and financial goals. 
 
