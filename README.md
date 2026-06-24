@@ -1,45 +1,78 @@
-# CP476
+# Personal Expense Tracker (Option #5)
 
-A simple budgeting app to keep your spending on track. This app organizes your transactions, 
-allows you to set and monitor budgets, and provides analysis of your spending to help you reach
-your financial goals. 
+This project is a <strong>Budget Tracking Web App</strong>. It enables user to submit and organize transactions and budgets, to moniter and analyze spending and financial goals. 
 
-## LINKS:
-### [KANBAN](https://github.com/users/lduncan1712/projects/1/views/1)
-### See ./docs for [Wiki](./docs/WIKI.MD) and [Wireframes](./docs/FIGMA.MD) 
+## Table Of Contents
+- [Structure](#structure)
+- [Progress](#progress)
+    - [Kanban](https://github.com/users/lduncan1712/projects/1/views/1)
+    - [Branches](https://github.com/lduncan1712/CP476/branches)
+    - [Contributors](https://github.com/lduncan1712/CP476/graphs/contributors?selectedMetric=commits&all=1)
+- [Documentation](#documentation)
+    - [Wireframes](./docs/FIGMA.MD) 
+    - [Wiki](./docs/WIKI.MD)
+- [Setup](#setup)
+    - [Requirements](#requirements)
+    - [Instructions](#instructions)
+
+## Structure
+This project is a <strong>Local Containerized Web App</strong>, run with <strong>Docker Desktop</strong>.
+```mermaid
+flowchart LR
+    User([User])
+    subgraph Docker["Docker"]
+        Frontend["Frontend: React"]
+        Backend["Backend: PHP"]
+        Database[("Database: PostgreSQL")]
+    end
+    User -->|Interacts| Frontend
+    Frontend -->|API Request| Backend
+    Backend -->|API Response| Frontend
+    Backend -->|SQL Query| Database
+    Database -->|Query Data| Backend
+```
+All utilized languages and tools on this stack are within project description or specifically approved
+
+| Layer     |   Language/Tool | Inclusion |
+|-----------|-----------------|------------- |
+| Frontend  | React      |  Chapter 11  |
+| Backend   | PHP        |  Chapter 12  |
+| Database  | PostgreSQL |  Approved    |
 
 
-## DETAILS:
+## Progress:
+Individual tasks were assigned, and their overall progress tracked through a shared  [KANBAN](https://github.com/users/lduncan1712/projects/1/views/1).
+Completion of tasks was done through git branches. Only after completion of a task, and following testing and review by anouther member of the group, was the code merged into main.
+Correspondingly, the entire contribution history for each group memeber can be found within this repository, and its [BRANCHES](https://github.com/lduncan1712/CP476/branches), as well as a summary agregate for [CONTRIBUTORS](https://github.com/lduncan1712/CP476/graphs/contributors?selectedMetric=commits&all=1)
 
-### Chosen Idea: Personal Expense Tracker (5)
 
-### Stack:
-- Container: Docker      (Verbally Approved)
-- Frontend:  React       (Chapter 11)
-- Backend:   PHP
-- Database:  Postgres/PostgreSQL     (Verbally Approved)
 
-## SETUP (Windows)
 
+### Documentation
+In addition to code annotation, we documented project discussions and meeting summaries, stored within a [WIKI](./docs/WIKI.MD).
+As well as frontend design using [Wireframes](./docs/FIGMA.MD)
+
+
+
+## Setup
 ### Requirements:
-- Docker Desktop
+- Docker Desktop (4.6.1+)
 
-### Setup Instructions
-Create an .env file with the following fields
-```
-POSTGRES_DB=
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-```
-Build the Docker container with:
-```
-docker compose up --build
-```
-Confirm the frontend runs with:
-```
-http://localhost:3000
-```
-Confirm the database has been setup and seeded properly with:
-```
-docker exec -it cp476-main-postgres-1 psql -U {POSTGRES_USER} -d {POSTGRES_DB}-c "SELECT * FROM transaction_categories;"
-```
+### Instructions
+
+1. Create an '.env' file within the project folder, containing the following environment variables. Please note all are local, and can be set to any non blank name
+    ```
+    POSTGRES_DB=
+    POSTGRES_USER=
+    POSTGRES_PASSWORD=
+    ```
+2. Using specified environment variables, run the following command to create the docker container.
+    ```
+    docker compose up --build
+    ```
+3. (OPTIONAL): Upon completion of setup, use the below commands/links to confirm each layer of the stack has been properly setup and activated.
+    | Layer | Test | Expected |
+   |-------|------|----------|
+   | Frontend | http://localhost:3000 | Login Page Displayed |
+   | Backend  | http://localhost:8080/health.php | Status 200 |
+   | Database (Seeded) | ./tests/select_categories.sh | Returns Table Data |
