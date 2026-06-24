@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./BudgetPopup.css";
+import "./Popup.css";
 
 export default function BudgetPopup({ onClose }) {
 
