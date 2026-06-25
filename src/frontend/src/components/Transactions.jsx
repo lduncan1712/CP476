@@ -22,11 +22,6 @@ export default function Transactions() {
             <AddTransaction/>
             <TransactionsTable rows={transactions}/>
         </div>
-      {/*{transactions.map(t => (*/}
-      {/*  <p key={t.id}>*/}
-      {/*    {t.transaction_date}: ${t.amount} (category {t.category_id})*/}
-      {/*  </p>*/}
-      {/*))}*/}
     </div>
   )
 }

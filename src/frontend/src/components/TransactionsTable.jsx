@@ -36,8 +36,8 @@ export default function TransactionsTable({ rows: transactions = [] }) {
                     <tr key={index}>
                         <td className="amount">{row.amount}</td>
                         <td className="date">{row.transaction_date}</td>
-                        <td className="vendor">{row.entity_id}</td>
-                        <td className="category">{row.category_id}</td>
+                        <td className="vendor">{row.entity_name}</td>
+                        <td className="category">{row.category_name}</td>
                         <td className="actions">
                             <button
                                 className="btn btn-edit"

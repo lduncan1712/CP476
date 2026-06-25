@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {api} from '../api'
 import "./AddTransaction.css"
 
-export default function AddTransaction() {
+export default function AddTransaction({setTransaction}) {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [vendor, setVendor] = useState("");
@@ -10,10 +10,8 @@ export default function AddTransaction() {
 
     const submitTransaction = () => {
         // Convert category and entity to IDs
-        console.log(date);
-        api("/transactions", {method: 'POST', body: {category_id: 1, vendor_id: vendor, amount: amount, transaction_date: date}}).then()
+        api("/transactions", {method: 'POST', body: JSON.stringify({category_id: 1, entity_id: 3, amount: amount, transaction_date: date})}).then()
     }
-
 
     return (
         <div id={"form-div"}>
