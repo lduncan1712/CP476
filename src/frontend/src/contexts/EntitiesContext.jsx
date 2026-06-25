@@ -7,13 +7,15 @@ export function EntitiesProvider({children}) {
     const [entities, setEntities] = useState([]);
 
     useEffect(() => {
-        api("./entities").then(setEntities)
+        api("/entities").then(setEntities)
     }, []);
 
+    // console.log("Entities: " + JSON.stringify(entities))
+
     return (
-        <EntityContext.Provider value={entities}>
+        <EntitiesContext.Provider value={entities}>
             {children}
-        </EntityContext.Provider>
+        </EntitiesContext.Provider>
     );
 }
 

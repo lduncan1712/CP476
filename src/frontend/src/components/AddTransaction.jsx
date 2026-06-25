@@ -1,16 +1,18 @@
 import {useState, useEffect} from 'react'
 import {api} from '../api'
 import "./AddTransaction.css"
+import {useEntities} from "../contexts/EntitiesContext.jsx";
 
 export default function AddTransaction({setTransaction}) {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [vendor, setVendor] = useState("");
     const [category, setCategory] = useState("");
+    const entities = useEntities();
 
     const submitTransaction = () => {
         // Convert category and entity to IDs
-        api("/transactions", {method: 'POST', body: JSON.stringify({category_id: 1, entity_id: 3, amount: amount, transaction_date: date})}).then()
+        api("/transactions", {method: 'POST', body: JSON.stringify({category_id: 1, entity_id: vendor, amount: amount, transaction_date: date})}).then()
     }
 
     return (
@@ -45,6 +47,15 @@ export default function AddTransaction({setTransaction}) {
                         value={vendor}
                         onChange={(e) => setVendor(e.target.value)}
                     />
+                    {/*<select*/}
+                    {/*    className={"field"}*/}
+                    {/*    value={"vendor"}*/}
+                    {/*    onChange={(e) => setVendor(e.target.value)}*/}
+                    {/*>*/}
+                    {/*    {entities.map((entity, id) => (*/}
+                    {/*            <option value={id}>entity.name</option>*/}
+                    {/*        ))}*/}
+                    {/*</select>*/}
                 </div>
 
                 <div className={"form-row"}>
