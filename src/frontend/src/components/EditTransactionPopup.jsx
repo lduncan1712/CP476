@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import "./Popup.css";
 
 export default function EditTransactionPopup({transaction, onClose}) {
     const [amount, setAmount] = useState(transaction?.amount || 0);
@@ -27,11 +28,9 @@ export default function EditTransactionPopup({transaction, onClose}) {
         <div className={"overlay"}>
             <div className={"popup"}>
                 <div className="banner">
-                    <h2>Edit this transaction</h2>
+                    <h2>Edit Transaction</h2>
 
-                    <button className="close-btn" onClick={onClose}>
-                        ×
-                    </button>
+                    <button className="close-btn" onClick={onClose}>×</button>
                 </div>
 
                 <form >
