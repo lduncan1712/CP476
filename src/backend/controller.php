@@ -346,3 +346,16 @@ function delete_user(PDO $db, int $user_id): array|false {
     $statement->execute(['id' => $user_id]);
     return $statement->fetch();
 }
+
+
+
+
+
+function select_categories(PDO $db, int $user_id): array
+{
+    $statement = $db->prepare(
+        "SELECT * FROM transaction_categories ORDER BY name"
+    );
+    $statement->execute();
+    return $statement->fetchAll();
+}
