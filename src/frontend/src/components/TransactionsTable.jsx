@@ -8,7 +8,7 @@ import EditTransactionPopup from "./EditTransactionPopup.jsx";
 * When connected to the API, should also pass row.id, so that transactions can be edited and deleted.
 */
 
-export default function TransactionsTable({ rows = [] }) {
+export default function TransactionsTable({ rows: transactions = [] }) {
     const [selectedTransaction, setSelectedTransaction] = useState("")
     const [editDialogOpen, setEditDialogOpen] = useState(false)
 
@@ -32,18 +32,18 @@ export default function TransactionsTable({ rows = [] }) {
                 </tr>
                 </thead>
                 <tbody>
-                {rows.map((row, index) => (
+                {transactions.map((row, index) => (
                     <tr key={index}>
                         <td className="amount">{row.amount}</td>
-                        <td className="date">{row.date}</td>
-                        <td className="vendor">{row.vendor}</td>
-                        <td className="category">{row.category}</td>
+                        <td className="date">{row.transaction_date}</td>
+                        <td className="vendor">{row.entity_name}</td>
+                        <td className="category">{row.category_name}</td>
                         <td className="actions">
                             <button
                                 className="btn btn-edit"
                                 onClick={() => {
                                     setEditDialogOpen(true)
-                                    setSelectedTransaction(rows[index])
+                                    setSelectedTransaction(transactions[index])
                                 }}
                             >
                                 Edit

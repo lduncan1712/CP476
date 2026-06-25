@@ -12,9 +12,9 @@ export default function EditTransactionPopup({transaction, onClose}) {
     useEffect(() => {
         if (transaction) {
             setAmount(transaction.amount || 0)
-            setDate(transaction.date || "")
-            setVendor(transaction.vendor || "")
-            setCategory(transaction.category || "")
+            setDate(transaction.transaction_date || "")
+            setVendor(transaction.entity_id || "")
+            setCategory(transaction.category_id || "")
         }
     }, [transaction])
 
