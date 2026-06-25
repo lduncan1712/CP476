@@ -112,3 +112,21 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 - **Further team understanding working with GitHub and Docker**
     - Push/pull requests, branches, committing, testing, approval, etc.
     - Troubleshot Docker Desktop and linking with GitHub repo.
+ 
+
+## June 25th, 2026 (30 minutes)
+#### Minutes:
+- Check in about Milestone #2
+- **Front-end:**
+	- Most core pages are made, however not yet connected to API
+   	- Forms largely setup
+- **Back-end:**
+	- Endpoints complete and accessible for use
+   	- Tests to see functionality have been made, and example uses are within frontend
+- **Database:**
+  	- Design formalized for Milestone 2
+  	- AUTH delayed to milestone 3
+- **Report Attachments:**
+	- Adam will push ER diagram and database design document updates
+- **Deadline Delay:**
+  	- Milestone deadline pushed to Sunday
