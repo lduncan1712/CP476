@@ -1,32 +1,11 @@
 .landing-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-
-  /* smaller top row */
   grid-template-rows: 70px auto auto;
-
   gap: 25px;
   padding: 20px;
-  background: #f4f4f4;
 }
 
-/* top row boxes */
-.welcome-box,
-.date-box {
-  background: #7ea2f2;
-  border-radius: 8px;
-  padding: 10px 20px;   /* smaller padding */
-  display: flex;
-  align-items: center;
-}
-
-.welcome-box h2,
-.date-box h2 {
-  font-size: 1.2rem;
-  margin: 0;
-}
-
-/* grid placement */
 .welcome-box {
   grid-column: 1 / 2;
 }
@@ -35,7 +14,6 @@
   grid-column: 2 / 4;
 }
 
-/* middle row */
 .overall-budget {
   grid-column: 1 / 2;
 }
@@ -43,6 +21,10 @@
 .transactions-placeholder {
   grid-column: 2 / 4;
   min-height: 220px;
-  background: #d9d9d9;
-  border-radius: 8px;
+}
+
+/* put it here at the bottom */
+.landing-transactions th:last-child,
+.landing-transactions td:last-child {
+  display: none;
 }
