@@ -130,7 +130,10 @@ echo $(curl -s -X POST "$BASE_URL/users" \
 
 
 
-
+echo "GET CATEGORIES(s): "
+echo $(curl -s -X GET "$BASE_URL/categories" \
+    -H "$AUTH" \
+    )
 
 
 

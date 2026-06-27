@@ -1,3 +1,7 @@
+:root {
+    font-family: Inter, sans-serif;
+}
+
 .overlay {
     position: fixed;
     inset: 0;
@@ -28,23 +32,20 @@
 
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .banner h2 {
-    margin: 0;
-    font-size: 38px;
+    margin-left: 25px;
+    font-size: 32px;
     font-weight: bold;
 }
 
 .close-btn {
     position: absolute;
-    top: 15px;
-    right: 15px;
+    right: 25px;
 
-    width: 35px;
-    height: 35px;
-
+    max-width: 6px;
     border: none;
     background: transparent;
 

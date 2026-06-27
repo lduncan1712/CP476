@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import "./Popup.css";
 
 export default function EditTransactionPopup({transaction, onClose}) {
     const [amount, setAmount] = useState(transaction?.amount || 0);
@@ -11,9 +12,9 @@ export default function EditTransactionPopup({transaction, onClose}) {
     useEffect(() => {
         if (transaction) {
             setAmount(transaction.amount || 0)
-            setDate(transaction.date || "")
-            setVendor(transaction.vendor || "")
-            setCategory(transaction.category || "")
+            setDate(transaction.transaction_date || "")
+            setVendor(transaction.entity_id || "")
+            setCategory(transaction.category_id || "")
         }
     }, [transaction])
 
@@ -27,11 +28,9 @@ export default function EditTransactionPopup({transaction, onClose}) {
         <div className={"overlay"}>
             <div className={"popup"}>
                 <div className="banner">
-                    <h2>Edit this transaction</h2>
+                    <h2>Edit Transaction</h2>
 
-                    <button className="close-btn" onClick={onClose}>
-                        ×
-                    </button>
+                    <button className="close-btn" onClick={onClose}>×</button>
                 </div>
 
                 <form >

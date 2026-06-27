@@ -115,6 +115,13 @@ function route(): void {
                 default: respond_error(405, "Method Not Allowed");
             }
             break;
+
+        case '/categories':
+            switch($method){
+                case 'GET': respond_any(select_categories($db, $user_id));
+                default: respond_error(405, "Method Not Allowed");
+            }
+            break;
         default: respond_error(404, "Path Not Found");
     }
 }
