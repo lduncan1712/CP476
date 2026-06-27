@@ -79,7 +79,7 @@
   flex: 1;
 }
 
-/*Analytics CSS*/
+/*Analytics Page CSS*/
 #analytics-title {
   text-align: center;
   font-size: 40px;
@@ -91,8 +91,8 @@
 }
 
 .analytics_card {
-	justify-content:space-between;
-	padding: 25px;
+	justify-content:space-evenly;
+	padding: 15px;
 	margin: 10px;
   border-radius: 15px;
 	display:flex;
