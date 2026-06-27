@@ -1,28 +1,49 @@
 import { useState } from "react";
 import "./BudgetPopup.css";
 
-export default function BudgetPopup({ onClose }) {
-
+export default function BudgetPopup({ onClose, onSubmit }) {
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [repeats, setRepeats] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  function calculateDaysLeft(endDate) {
+  const today = new Date();
+  const end = new Date(endDate);
 
-    console.log({
-      category,
-      amount,
-      startDate,
-      endDate,
-      repeats
-    });
+  const diff = end - today;
 
-    onClose();
-  }
+  return Math.max(
+    0,
+    Math.ceil(diff / (1000 * 60 * 60 * 24))
+  );
+}
+  
+  
+  
+  
+ function handleSubmit(e) {
+  e.preventDefault();
 
+  const newBudget = {
+    id: Date.now(),
+    category,
+    amount: Number(amount),
+    spent: 0,
+    repeats,
+    startDate,
+    endDate,
+    days_left: calculateDaysLeft(endDate)
+  };
+
+  if (Number(amount) <= 0) {
+  alert("Budget amount must be greater than $0.");
+  return;
+}
+
+  onSubmit(newBudget);
+}
   return (
     <div className="overlay">
 
