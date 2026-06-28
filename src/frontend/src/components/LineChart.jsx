@@ -35,16 +35,7 @@ export default function LineChart({data}) {
 
     return (
         <div>
-        <text
-            x={margin.left}
-            y={25}
-            fontFamily="Georgia, serif"
-            fontSize="20"
-            fontWeight="normal"
-            fill="#4b5563"
-        >
-            Expenses throughout the Years
-        </text>
+        <h3>Expenses throughout the Years</h3>
 
         <svg width={width} height={height}>
             {/* Horizontal grid lines */}

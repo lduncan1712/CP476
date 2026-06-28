@@ -7,6 +7,7 @@ import { api } from '../api'
 import LineChart from "./LineChart";
 import MonthLineChart from "./MonthLineChart";
 import PieChart from "./PieChart";
+import './Analytics.css'
 
 export default function Analytics() {
 
