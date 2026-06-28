@@ -15,11 +15,14 @@ export default function Landing() {
     day: "numeric",
   });
 
-  // Load transactions and keep only newest 3
+  // Load newest 3 transactions
   useEffect(() => {
     api("/transactions").then((data) => {
       const recentTransactions = data
-        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .sort(
+          (a, b) =>
+            new Date(b.transaction_date) - new Date(a.transaction_date)
+        )
         .slice(0, 3);
 
       setTransactions(recentTransactions);
@@ -48,7 +51,8 @@ export default function Landing() {
         />
       </div>
 
-      <div className="transactions-placeholder landing-transactions">
+      <div className="recent-transactions landing-transactions">
+        <h2>Recent Transactions</h2>
         <TransactionsTable rows={transactions} />
       </div>
 
