@@ -11,17 +11,16 @@ const COLORS = [
   "#EC407A"
 ];
 
-const polarToCartesian = (cx, cy, r, angle) => {
+function polarToCartesian(cx, cy, r, angle) {
   const radians = (angle - 90) * Math.PI / 180;
 
   return {
     x: cx + r * Math.cos(radians),
     y: cy + r * Math.sin(radians)
   };
-};
+}
 
-const createArc = (cx, cy, outerR, innerR, startAngle, endAngle) => {
-
+function createArc(cx, cy, outerR, innerR, startAngle, endAngle) {
   const startOuter = polarToCartesian(cx, cy, outerR, endAngle);
   const endOuter = polarToCartesian(cx, cy, outerR, startAngle);
 
@@ -31,36 +30,35 @@ const createArc = (cx, cy, outerR, innerR, startAngle, endAngle) => {
   const largeArc = endAngle - startAngle > 180 ? 1 : 0;
 
   return `
-      M ${startOuter.x} ${startOuter.y}
-      A ${outerR} ${outerR} 0 ${largeArc} 0 ${endOuter.x} ${endOuter.y}
-      L ${startInner.x} ${startInner.y}
-      A ${innerR} ${innerR} 0 ${largeArc} 1 ${endInner.x} ${endInner.y}
-      Z
+    M ${startOuter.x} ${startOuter.y}
+    A ${outerR} ${outerR} 0 ${largeArc} 0 ${endOuter.x} ${endOuter.y}
+    L ${startInner.x} ${startInner.y}
+    A ${innerR} ${innerR} 0 ${largeArc} 1 ${endInner.x} ${endInner.y}
+    Z
   `;
-};
+}
 
-export default function PieChart({ data }) {
-
+export default function ExpenseDonutChart({
+  data,
+  width = 500,
+  height = 200
+}) {
   const today = new Date();
 
   const monthData = data.filter(item => {
-
-    const date = new Date(item.transactionDate);
+    const d = new Date(item.transactionDate);
 
     return (
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
+      d.getMonth() === today.getMonth() &&
+      d.getFullYear() === today.getFullYear()
     );
-
   });
 
   const grouped = {};
 
   monthData.forEach(item => {
-
     grouped[item.category_id] =
       (grouped[item.category_id] || 0) + item.amount;
-
   });
 
   const chartData = Object.entries(grouped).map(([category, amount], i) => ({
@@ -71,39 +69,45 @@ export default function PieChart({ data }) {
 
   const total = chartData.reduce((sum, item) => sum + item.amount, 0);
 
+  // Padding leaves room for labels
+  const padding = 140;
+
+  const cx = width / 2;
+  const cy = height / 2;
+
+  const outerRadius =
+    Math.min(width - padding * 2, height - 40) / 2;
+
+  const innerRadius = outerRadius * 0.55;
+
   let currentAngle = 0;
 
-  const cx = 200;
-  const cy = 170;
-  const outerRadius = 120;
-  const innerRadius = 65;
-
   return (
-
-    <svg width="500" height="350">
-
+    <svg
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+    >
       {chartData.map((item, index) => {
-
-        const angle = (item.amount / total) * 360;
+        const angle = total === 0 ? 0 : (item.amount / total) * 360;
 
         const start = currentAngle;
         const end = currentAngle + angle;
 
         currentAngle += angle;
 
-        const midAngle = (start + end) / 2;
+        const mid = (start + end) / 2;
 
-        const labelPoint =
-          polarToCartesian(cx, cy, outerRadius + 20, midAngle);
+        const p1 = polarToCartesian(cx, cy, outerRadius, mid);
+        const p2 = polarToCartesian(cx, cy, outerRadius + 18, mid);
 
-        const lineEndX =
-          labelPoint.x < cx
-            ? labelPoint.x - 60
-            : labelPoint.x + 60;
+        const rightSide = p2.x > cx;
+
+        const labelX = rightSide ? width - 20 : 20;
+        const anchor = rightSide ? "end" : "start";
 
         return (
           <g key={index}>
-
             <path
               d={createArc(
                 cx,
@@ -117,35 +121,41 @@ export default function PieChart({ data }) {
             />
 
             <line
-              x1={labelPoint.x}
-              y1={labelPoint.y}
-              x2={lineEndX}
-              y2={labelPoint.y}
+              x1={p1.x}
+              y1={p1.y}
+              x2={p2.x}
+              y2={p2.y}
+              stroke="#999"
+            />
+
+            <line
+              x1={p2.x}
+              y1={p2.y}
+              x2={labelX}
+              y2={p2.y}
               stroke="#999"
             />
 
             <text
-              x={lineEndX + (lineEndX < cx ? -5 : 5)}
-              y={labelPoint.y - 4}
-              fontSize="12"
-              textAnchor={lineEndX < cx ? "end" : "start"}
+              x={labelX}
+              y={p2.y - 4}
+              fontSize={12}
+              textAnchor={anchor}
             >
               {item.category}
             </text>
 
             <text
-              x={lineEndX + (lineEndX < cx ? -5 : 5)}
-              y={labelPoint.y + 12}
-              fontSize="11"
+              x={labelX}
+              y={p2.y + 12}
+              fontSize={11}
               fill="#777"
-              textAnchor={lineEndX < cx ? "end" : "start"}
+              textAnchor={anchor}
             >
               {(item.amount / total * 100).toFixed(1)}%
             </text>
-
           </g>
         );
-
       })}
 
       <circle
@@ -157,15 +167,23 @@ export default function PieChart({ data }) {
 
       <text
         x={cx}
-        y={cy + 5}
+        y={cy - 8}
         textAnchor="middle"
-        fontSize="20"
+        fontSize={16}
+        fill="#666"
+      >
+        Total
+      </text>
+
+      <text
+        x={cx}
+        y={cy + 18}
+        textAnchor="middle"
+        fontSize={26}
         fontWeight="500"
       >
         ${total.toFixed(2)}
       </text>
-
     </svg>
-
   );
 }

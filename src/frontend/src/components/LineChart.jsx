@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function LineChart({data, xLabel, overlayOn, overlayData}) {
+export default function LineChart({data}) {
     // Define chart dimensions
     const width = 800;
     const height = 300;
@@ -11,7 +11,7 @@ export default function LineChart({data, xLabel, overlayOn, overlayData}) {
 
     // Convert data points into SVG coordinates
     const points = data.map((item, index) => {
-        const x =
+        const x = 
         margin.left +
         (index * chartWidth) / (data.length - 1);
 
@@ -20,7 +20,8 @@ export default function LineChart({data, xLabel, overlayOn, overlayData}) {
         chartHeight -
         (item.amount / maxValue) * chartHeight;
 
-        const xAxis = (xLabel === "Day of the Month" ? item.transactionDate.getDay():item.transactionDate.toLocaleDateString());
+        const xAxis = item.transactionDate.getFullYear();
+        
         return { ...item, x, y, dateStr: xAxis};//};
     });
 
@@ -34,7 +35,16 @@ export default function LineChart({data, xLabel, overlayOn, overlayData}) {
 
     return (
         <div>
-        <h2>Expenses Over Time</h2>
+        <text
+            x={margin.left}
+            y={25}
+            fontFamily="Georgia, serif"
+            fontSize="20"
+            fontWeight="normal"
+            fill="#4b5563"
+        >
+            Expenses throughout the Years
+        </text>
 
         <svg width={width} height={height}>
             {/* Horizontal grid lines */}
@@ -132,7 +142,7 @@ export default function LineChart({data, xLabel, overlayOn, overlayData}) {
             textAnchor="middle"
             fontSize="14"
             >
-            {xLabel}
+            Year
             </text>
 
             {/* Y-axis title */}

@@ -5,6 +5,7 @@ import { api } from '../api'
 // import yearview_graph from '../assets/yearview_graph.png';
 // import piechart from '../assets/piechart.png';
 import LineChart from "./LineChart";
+import MonthLineChart from "./MonthLineChart";
 import PieChart from "./PieChart";
 
 export default function Analytics() {
@@ -20,7 +21,7 @@ export default function Analytics() {
     }, [])
 
     // Data is hard-coded for now
-    const totalBudget = 2023;
+    const totalBudget = 200;
     // Data split by category for this current month
     const categoryData = [
         { category: "Groceries", amount: 32.55},
@@ -30,22 +31,22 @@ export default function Analytics() {
         { category: "Entertainment", amount: 65.57}
     ];
     // Data by day (most granular form)
-    const dailyData = [{ transactionDate: new Date("9/10/2023"), amount: 32.55 },
-    { transactionDate: new Date("9/11/2023"), amount: 300.52 },
-    { transactionDate: new Date("9/22/2023"), amount: 38.25 },
-    { transactionDate: new Date("10/23/2024"), amount: 50.02 },
-    { transactionDate: new Date("9/10/2025"), amount: 32.55 },
-    { transactionDate: new Date("9/11/2025"), amount: 300.52 },
-    { transactionDate: new Date("9/22/2025"), amount: 38.25 },
-    { transactionDate: new Date("10/10/2025"), amount: 15.55 },
-    { transactionDate: new Date("10/23/2025"), amount: 50.02 },
-    { transactionDate: new Date("11/1/2025"), amount: 170.02 },
-    { transactionDate: new Date("6/2/2026"), amount: 10.0 },
-    { transactionDate: new Date("6/12/2026"), amount: 10.0 },
-    { transactionDate: new Date("6/1/2026"), amount: 10.0 },
-    { transactionDate: new Date("5/1/2026"), amount: 20.00 },
-    { transactionDate: new Date("6/23/2026"), amount: 30.00 },
-    { transactionDate: new Date("5/20/2026"), amount: 40.00 }];
+    const dailyData = [{ transactionDate: new Date("9/10/2023"), amount: 32.55, category_id:  "Transportation" },
+    { transactionDate: new Date("9/11/2023"), amount: 300.52, category_id:  "Transportation" },
+    { transactionDate: new Date("9/22/2023"), amount: 38.25, category_id:  "Transportation" },
+    { transactionDate: new Date("10/23/2024"), amount: 50.02, category_id:  "Transportation" },
+    { transactionDate: new Date("9/10/2025"), amount: 32.55, category_id:  "Clothing" },
+    { transactionDate: new Date("9/11/2025"), amount: 300.52, category_id:  "Entertainment" },
+    { transactionDate: new Date("9/22/2025"), amount: 38.25, category_id:  "Utilities" },
+    { transactionDate: new Date("10/10/2025"), amount: 15.55, category_id:  "Clothing" },
+    { transactionDate: new Date("10/23/2025"), amount: 50.02, category_id:  "Groceries" },
+    { transactionDate: new Date("11/1/2025"), amount: 170.02, category_id:  "Clothing" },
+    { transactionDate: new Date("6/2/2026"), amount: 10.0, category_id:  "Entertainment" },
+    { transactionDate: new Date("6/12/2026"), amount: 10.0, category_id:  "Groceries" },
+    { transactionDate: new Date("6/1/2026"), amount: 10.0, category_id:  "Transportation" },
+    { transactionDate: new Date("5/1/2026"), amount: 25.00, category_id:  "Transportation" },
+    { transactionDate: new Date("6/23/2026"), amount: 30.00, category_id:  "Groceries" },
+    { transactionDate: new Date("5/20/2026"), amount: 40.00, category_id:  "Clothing" }];
 
     // Filtered data for this month
     const currentMonthData = dailyData.filter(item => {
@@ -117,26 +118,25 @@ export default function Analytics() {
         <section class="cards">
             <article class="analytics_card">
                 <figure id = "graph-summary">
+                    {isMonthview ?
+                    <MonthLineChart data={dailyData} overlayOn={hasOverlay}></MonthLineChart> :
                     <LineChart
-                     data={isMonthview ? currentMonthData: dailyData}
-                     xLabel={isMonthview ? "Day of the Month" : "Year"}
-                     overlayOn={hasOverlay} // if no overlay, just print a single line
-                     overlayData={lastMonthData}
-                     />
+                     data={dailyData}
+                     xLabel={"Year"}
+                     />}
+                     
                     <figcaption>The above graph shows the total expenses over time, until this current day</figcaption>
                 </figure>
                 <div class = "card-content">
                     { // Show overlay option only for month graph
-                    isMonthview && (
+                    isMonthview ? (
                     <>
                         <h2>{monthDay}</h2>
-                        <div>
-                            <label for = "overlay-check">Show overlay</label>
-                            <input id = "overlay-check" type="checkbox" checked={hasOverlay} onChange={() => setOverlay(!hasOverlay)}/>
-                        </div>
-                    </>)}
+                        <label for = "overlay-check" class = "line_graph_options">Show overlay</label>
+                        <input id = "overlay-check" type="checkbox" checked={hasOverlay} onChange={() => setOverlay(!hasOverlay)} class = "line_graph_options"/>
+                    </>) : (<h2>Your Expenses Through the Years</h2>)}
                     <button type="button"
-                     className={isMonthview ? 'chart-no-overlay' : 'chart-overlay'}
+                     className={`line_graph_options ${isMonthview ? 'chart-no-overlay' : 'chart-overlay'}`}
                      onClick={ // overlay option only available for monthview
                         () => {setMonthview(!isMonthview); setOverlay(false)}
                      }>
@@ -145,13 +145,14 @@ export default function Analytics() {
                     <div class = "points">
                         <ul>
                             <li>You have used up <strong>{percentUsed}</strong> of your budget so far (${monthExpenses.toFixed(2)} from ${totalBudget.toFixed(2)}).</li>
-                            <li>Compared to last month's expenses, which totaled to <strong>${lastMonthExpenses.toFixed(2)}</strong>, you spent <strong>{Math.abs(month_difference_pct)}% {month_difference_pct >= 0 ? "more":"less"}</strong></li>
+                            <li>Compared to last month's expenses, which totaled to <strong>${lastMonthExpenses.toFixed(2)}</strong>, you spent <strong>{Math.abs(month_difference_pct).toFixed(2)}% {month_difference_pct >= 0 ? "more":"less"}</strong></li>
                             </ul>
                     </div>
                 </div>
             </article>
             <article class = "analytics_card">
                 <figure id = "breakdown_chart">
+                    <h2>Month Breakdown</h2>
                     <PieChart data={dailyData} />
                     <figcaption>This graph shows a breakdown of this month's expenses by category</figcaption>
                 </figure>
@@ -159,9 +160,9 @@ export default function Analytics() {
                     <div class = "points">
                         <ul>
                             <li>You had the highest expenses in the <strong>{maxExpenseCat}</strong> category this month, with a total of <strong>${maxExpenseCatAmount.toFixed(2)}</strong>.</li>
-                            <li><strong>{maxIncreasePct}</strong> has had the biggest increase in expenses this month, by <strong>{maxIncreasePct}</strong>.</li>                         
-                            <li><strong>{maxDecreasePct}</strong> has had the biggest decrease in expenses this month, by <strong>{maxDecreasePct}</strong>.</li>
-                            <li>You are over budget in the following categories:<strong>Transportation, Groceries</strong>.</li>
+                            <li><strong>{maxIncreaseCat}</strong> has had the biggest increase in expenses this month, by <strong>{maxIncreasePct}</strong>.</li>                         
+                            <li><strong>{maxDecreaseCat}</strong> has had the biggest decrease in expenses this month, by <strong>{maxDecreasePct}</strong>.</li>
+                            <li>You are over budget in the following categories: <strong>Transportation, Groceries</strong>.</li>
                         </ul>
                     </div>
                 </div>
