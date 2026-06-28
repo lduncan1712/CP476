@@ -10,7 +10,7 @@ This project is a <strong>Budget Tracking Web App</strong>. It enables user to s
     - [Contributors](https://github.com/lduncan1712/CP476/graphs/contributors?selectedMetric=commits&all=1)
 - [Documentation](#documentation)
     - [Wireframes (./docs/FIGMA.md)](https://www.figma.com/design/5NRWMekE0zTByJyYxOhSXt/CP476-Wireframe?node-id=47-2&t=zqaOV9kuAhYrtkGI-1) 
-    - [Wiki (./docs/WIKI.md)](./docs/WIKI.MD)
+    - [Wiki (./docs/WIKI.md)](https://github.com/lduncan1712/CP476/blob/main/docs/WIKI.md)
 - [Setup](#setup)
     - [Requirements](#requirements)
     - [Instructions](#instructions)
