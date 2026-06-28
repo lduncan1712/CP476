@@ -4,7 +4,7 @@ import { api } from '../api'
 // import line_with_overlay from '../assets/line_with_overlay.png';
 // import yearview_graph from '../assets/yearview_graph.png';
 // import piechart from '../assets/piechart.png';
-import LineChart from "./LineChart";
+import YearLineChart from "./YearLineChart";
 import MonthLineChart from "./MonthLineChart";
 import PieChart from "./PieChart";
 import './Analytics.css'
@@ -121,7 +121,7 @@ export default function Analytics() {
                 <figure id = "graph-summary">
                     {isMonthview ?
                     <MonthLineChart data={dailyData} overlayOn={hasOverlay}></MonthLineChart> :
-                    <LineChart
+                    <YearLineChart
                      data={dailyData}
                      xLabel={"Year"}
                      />}
@@ -133,7 +133,7 @@ export default function Analytics() {
                     isMonthview ? (
                     <>
                         <h2>{monthDay}</h2>
-                        <label for = "overlay-check" class = "line_graph_options">Show overlay</label>
+                        <label for = "overlay-check" class = "line_graph_options">Compare with last month</label>
                         <input id = "overlay-check" type="checkbox" checked={hasOverlay} onChange={() => setOverlay(!hasOverlay)} class = "line_graph_options"/>
                     </>) : (<h2>Your Expenses Through the Years</h2>)}
                     <button type="button"

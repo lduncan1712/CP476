@@ -344,10 +344,8 @@ export default function MonthlyLineChart({
                 <circle
                     cx={lastPoint.x}
                     cy={lastPoint.y}
-                    r="2"
+                    r="4"
                     fill="#4285F4"
-                    stroke="white"
-                    strokeWidth="2"
                 />
 
             )}
