@@ -6,14 +6,14 @@ import Landing from '../components/Landing'
 import Transactions from '../components/Transactions'
 import Budgets from '../components/Budgets'
 import Analytics from '../components/Analytics'
-import Settings from '../components/Settings'
+
 
 const TABS = [
   { label: 'Landing', component: <Landing /> },
   { label: 'Transaction', component: <Transactions /> },
   { label: 'Budgets', component: <Budgets /> },
   { label: 'Analytics', component: <Analytics /> },
-  { label: 'Settings', component: <Settings /> },
+  // { label: 'Settings', component: <Settings /> },
 ]
 
 export default function MainPage() {
