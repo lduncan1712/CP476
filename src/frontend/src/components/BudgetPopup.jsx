@@ -106,6 +106,10 @@ function handleSubmit(e) {
             <option value="food">Food</option>
             <option value="transport">Transport</option>
             <option value="entertainment">Entertainment</option>
+            <option value="clothes">Clothes</option>
+            <option value="rent">Rent</option>
+            <option value="miscellaneous">Miscellaneous</option>
+
           </select>
 
           <input
