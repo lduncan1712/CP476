@@ -20,11 +20,54 @@ export default function BudgetPopup({ onClose, onSubmit }) {
   );
 }
   
+ function isValidDate(dateString) {
+  const match = dateString.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+  if (!match) return false;
+
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+
+  const date = new Date(year, month - 1, day);
+
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+} 
   
   
-  
- function handleSubmit(e) {
+function handleSubmit(e) {
   e.preventDefault();
+
+  const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  if (category === "") {
+    alert("Please select a category.");
+    return;
+  }
+
+  if (Number(amount) <= 0) {
+    alert("Budget amount must be greater than $0.");
+    return;
+  }
+
+  if (!dateRegex.test(startDate)) {
+    alert("Start Date must be in DD/MM/YYYY format.");
+    return;
+  }
+
+  if (!dateRegex.test(endDate)) {
+    alert("End Date must be in DD/MM/YYYY format.");
+    return;
+  }
+
+  if (!isValidDate(startDate) || !isValidDate(endDate)) {
+    alert("Please enter valid calendar dates.");
+    return;
+  }
 
   const newBudget = {
     id: Date.now(),
@@ -36,11 +79,6 @@ export default function BudgetPopup({ onClose, onSubmit }) {
     endDate,
     days_left: calculateDaysLeft(endDate)
   };
-
-  if (Number(amount) <= 0) {
-  alert("Budget amount must be greater than $0.");
-  return;
-}
 
   onSubmit(newBudget);
 }
