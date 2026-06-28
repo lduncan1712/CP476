@@ -115,7 +115,7 @@ export default function Analytics() {
 
     return (
     <div>
-        <h1 id = "analytics-title">Analytics</h1>
+        <h2 id = "analytics-title">Analytics</h2>
         <section class="cards">
             <article class="analytics_card">
                 <figure id = "graph-summary">
