@@ -50,7 +50,7 @@ Correspondingly, the entire contribution history for each group memeber can be f
 
 ### Documentation
 In addition to code annotation, we documented project discussions and meeting summaries, stored within a [WIKI](./docs/WIKI.MD).
-As well as frontend design using [Wireframes](./docs/FIGMA.MD)
+As well as frontend design using [Wireframes](https://www.figma.com/design/5NRWMekE0zTByJyYxOhSXt/CP476-Wireframe?node-id=47-2&t=zqaOV9kuAhYrtkGI-1)
 
 
 
