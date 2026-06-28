@@ -1,0 +1,62 @@
+.landing-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 70px auto auto;
+  gap: 25px;
+  padding: 20px;
+  background: #f4f4f4;
+}
+
+/* Top row */
+.welcome-box,
+.date-box {
+  background: #7ea2f2;
+  border-radius: 8px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.welcome-box h2,
+.date-box h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.welcome-box {
+  grid-column: 1 / 2;
+}
+
+.date-box {
+  grid-column: 2 / 4;
+}
+
+/* Middle row */
+.overall-budget {
+  grid-column: 1 / 2;
+}
+
+.recent-transactions {
+  grid-column: 2 / 4;
+  min-height: 220px;
+  background: #d3d3d3;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.recent-transactions h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+/* Bottom row cards */
+.landing-container > .budget-card {
+  width: 100%;
+}
+
+/* Hide edit/delete column */
+.landing-transactions th:last-child,
+.landing-transactions td:last-child {
+  display: none;
+}
