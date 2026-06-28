@@ -130,3 +130,11 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 	- Adam will push ER diagram and database design document updates
 - **Deadline Delay:**
   	- Milestone deadline pushed to Sunday
+
+## Milestone 2 Contributions:
+
+| Gracie Heer                | Lucas Duncan                | Jaime Beatty               | Charlie Carter              | Adam Bondi           | Jordan Franschman  | Yursa Hassan             | Evan Parisotto | Owen Macgowan                | Janaki Patel         |
+|----------------------------|-----------------------------|----------------------------|-----------------------------|----------------------|--------------------|--------------------------|----------------|------------------------------|----------------------|
+| Frontend: Add budget Popup | Backend: Endpoints          | Frontend: Main Page Layout | Frontend: Transaction Table | Database: ER Diagram | Backend: Endpoints | Frontend: Analytics Page |                | Frontend: Budget Status Card | Frontend: Login Page |
+| Frontend: Budget Page      | Database: SQL Create Tables | Frontend: Landing Screen   | Frontend: Transactions Page | Database: init.sql   |                    |                          |                |                              |                      |
+
