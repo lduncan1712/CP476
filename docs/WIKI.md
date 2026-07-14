@@ -35,7 +35,6 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 | Evan Parisotto   | Janaki Patel   |                   |
 
 
-
 ## Tuesday, May 19th, 2026 (30 minutes)
 ##### Minutes:
 - Initial, high level user stories were discussed. These need to be broken down into smaller, more detailed user stories.
@@ -111,15 +110,15 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 
 - **Further team understanding working with GitHub and Docker**
     - Push/pull requests, branches, committing, testing, approval, etc.
-    - Troubleshot Docker Desktop and linking with GitHub repo.
+    - Troubleshoot Docker Desktop and linking with GitHub repo.
  
 
 ## June 25th, 2026 (30 minutes)
 #### Minutes:
 - Check in about Milestone #2
 - **Front-end:**
-	- Most core pages are made, however not yet connected to API
-   	- Forms largely setup
+	- Most core pages are made; however, not yet connected to the API
+   	- Forms largely set up
 - **Back-end:**
 	- Endpoints complete and accessible for use
    	- Tests to see functionality have been made, and example uses are within frontend
@@ -138,3 +137,23 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 | Frontend: Add budget Popup | Backend: Endpoints          | Frontend: Main Page Layout | Frontend: Transaction Table | Database: ER Diagram | Backend: Endpoints | Frontend: Analytics Page |                | Frontend: Budget Status Card | Frontend: Login Page |
 | Frontend: Budget Page      | Database: SQL Create Tables | Frontend: Landing Screen   | Frontend: Transactions Page | Database: init.sql   |                    |                          |                |                              |                      |
 
+## July 7th, 2026 (30 minutes)
+#### Minutes:
+- Check-in for Milestone #03 – Full-Stack Integration, Testing Report, Final Demo & Presentation
+- **Milestone 3:**
+    - As a team, read through CP476B-S26 - Project Outline -> Milestone 03, to see what is ahead and how we are progressing
+    - Divided deliverables as done in the previous two milestones. Teams were created based on previous milestone tasks and group member strengths and comfort level.
+    - Assigned specific sub-tasks and created initial deadlines for check-ins (see below table).
+      
+	| Connecting frontend & backend | Testing + Testing Report | Kanban, Presentation artifiact, and Wiki |
+	|-------------------------------|--------------------------|------------------------------------------|
+	| Owen Macgowan                 | Gracie Heer              | Adam Bondi
+	| Charlie Carter                | Yursa Hassan             | Evan Parisotto
+	| Lucas Duncan                  | Jamie Beatty             |
+	| Jordan Franschman             | Janaki Patel             |										  |
+										
+    - Final Demo Video (10 minutes): ALL group members (to be discussed and planned out in the next meeting).
+- **To be checked**: Deployment/execution instructions (README).
+    - Already created clear steps to run locally from a clean machine setup (including any environment/config notes).
+    - Need to double-check we are not missing anything.
+- **Plan next meeting**: Tuesday, Jul 14 after class to discuss progress, challenges, concerns, etc.
