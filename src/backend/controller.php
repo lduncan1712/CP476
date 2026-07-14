@@ -247,7 +247,7 @@ function create_entity(PDO $db, int $user_id, array $body): array|false {
 
 function select_entities(PDO $db, int $user_id, array $params): array {
     $params['name'] = $params['name'] ?? '';
-    $params['id'] = (int)$params['id'] ?? 0;
+    $params['id'] = (int)($params['id'] ?? 0);
 
     $statement = $db->prepare(
         "SELECT * FROM entities

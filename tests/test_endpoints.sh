@@ -97,8 +97,13 @@ ENTITY=$(curl -s -X POST "$BASE_URL/entities" \
 ID=$(get_id $ENTITY)
 echo $ENTITY
 
-echo "GET ENTITIE(s): "
+echo "GET ENTITY: "
 echo $(curl -s -X GET "$BASE_URL/entities?id=$ID&name=JP" \
+    -H "$AUTH" \
+    )
+
+echo "GET ENTITIE(s): "
+echo $(curl -s -X GET "$BASE_URL/entities" \
     -H "$AUTH" \
     )
 
@@ -137,4 +142,4 @@ echo $(curl -s -X GET "$BASE_URL/categories" \
 
 
 
-sleep 10
+sleep 100
