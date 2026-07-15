@@ -1,25 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { api } from "../api";
 import "./Popup.css";
 
+const DURATION_IDS ={ weekly: 2, monthly: 3, yearly: 4 };
+
 export default function BudgetPopup({ onClose, onSubmit }) {
-  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState("");
   const [amount, setAmount] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [repeats, setRepeats] = useState("");
 
-  function calculateDaysLeft(endDate) {
-  const today = new Date();
-  const end = new Date(endDate);
+  useEffect(() => {
+    api('/categories').then(setCategories);
+  }, []);
 
-  const diff = end - today;
+  function toISODate(dateString) {
+    const [day, month, year] = dateString.split('/');
+    return `${year}-${month}-${day}`;
+  }
 
-  return Math.max(
-    0,
-    Math.ceil(diff / (1000 * 60 * 60 * 24))
-  );
-}
-  
  function isValidDate(dateString) {
   const match = dateString.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
 
@@ -44,7 +45,7 @@ function handleSubmit(e) {
 
   const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
 
-  if (category === "") {
+  if (categoryId === "") {
     alert("Please select a category.");
     return;
   }
@@ -69,18 +70,18 @@ function handleSubmit(e) {
     return;
   }
 
-  const newBudget = {
-    id: Date.now(),
-    category,
-    amount: Number(amount),
-    spent: 0,
-    repeats,
-    startDate,
-    endDate,
-    days_left: calculateDaysLeft(endDate)
-  };
+  if (repeats === "") {
+    alert("Please select how often this budget repeats.");
+    return;
+  }
 
-  onSubmit(newBudget);
+  onSubmit({
+    category_id: Number(categoryId),
+    amount: Number(amount),
+    duration_id: DURATION_IDS[repeats],
+    budget_start: toISODate(startDate),
+    budget_end: toISODate(endDate),
+  });
 }
   return (
     <div className="overlay">
@@ -99,17 +100,13 @@ function handleSubmit(e) {
 
           <select
             className="field"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
           >
             <option value="">Category</option>
-            <option value="food">Food</option>
-            <option value="transport">Transport</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="clothes">Clothes</option>
-            <option value="rent">Rent</option>
-            <option value="miscellaneous">Miscellaneous</option>
-
+            {categories.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
           </select>
 
           <input

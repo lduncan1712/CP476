@@ -220,12 +220,15 @@ function select_budgets(PDO $db, int $user_id, array $params): array
     $params['user_id'] = $user_id;
 
     $statement = $db->prepare(
-        "SELECT * FROM budgets
-         WHERE 
-            (:user_id = user_id) AND
-            (:id = 0 OR id = :id) AND
-            (:category_id = 0 OR category_id = :category_id)
-         ORDER BY budget_start"
+        "SELECT b.*,
+                tc.name AS category_name
+         FROM budgets b
+         LEFT JOIN transaction_categories tc ON tc.id = b.category_id
+         WHERE
+            (:user_id = b.user_id) AND
+            (:id = 0 OR b.id = :id)  AND
+            (:category_id = 0 OR b.category_id = :category_id)
+         ORDER BY b.budget_start"
     );
     $statement->execute($params);
     return $statement->fetchAll();
