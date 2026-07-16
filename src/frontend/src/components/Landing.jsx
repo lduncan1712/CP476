@@ -53,7 +53,10 @@ export default function Landing() {
 
       <div className="recent-transactions landing-transactions">
         <h2>Recent Transactions</h2>
-        <TransactionsTable rows={transactions} />
+        <TransactionsTable 
+          rows={transactions} 
+          onDelete={(id) => setTransactions(transactions.filter(t => t.id !== id))}
+        />
       </div>
 
       {/* Bottom Row */}

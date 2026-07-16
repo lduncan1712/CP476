@@ -48,7 +48,7 @@ export default function TransactionsTable({ rows: transactions = [], onDelete })
                                 className="btn btn-edit"
                                 onClick={() => {
                                     setEditDialogOpen(true)
-                                    setSelectedTransaction(row)
+                                    setSelectedTransaction(row.id)
                                 }}
                             >
                                 Edit

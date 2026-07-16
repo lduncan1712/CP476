@@ -1,25 +1,55 @@
 import { useState, useEffect } from 'react'
 import "./Popup.css";
+import {api} from "../api.js";
+import {useCategories} from "../contexts/CategoryContext.jsx";
 
 export default function EditTransactionPopup({transaction, onClose}) {
-    const [amount, setAmount] = useState(transaction?.amount || 0);
-    const [date, setDate] = useState(transaction?.date || "");
-    const [vendor, setVendor] = useState(transaction?.vendor || "");
-    const [category, setCategory] = useState(transaction?.category || "");
+    const [amount, setAmount] = useState(0);
+    const [date, setDate] = useState("");
+    const [entity, setEntity] = useState("");
+    const [category, setCategory] = useState(-1);
+    const categories = useCategories()
 
 
     // Needs to eventually pass transaction id so that transactions can be updated in the database
     useEffect(() => {
         if (transaction) {
-            setAmount(transaction.amount || 0)
-            setDate(transaction.transaction_date || "")
-            setVendor(transaction.entity_id || "")
-            setCategory(transaction.category_id || "")
+            api(('/transactions?id=' + transaction)).then(result => {
+                console.log(result[0])
+                if (result.length !== 1) {
+                    window.alert("An error occurred");
+                    onClose()
+                } else {
+                    result = result[0]
+                    setAmount(result.amount || 0)
+                    setDate(result.transaction_date || "")
+                    setEntity(result.entity_name || "")
+                    setCategory(result.category_id || -1)
+                }
+            })
         }
+
     }, [transaction])
 
-    const handleSubmit = (e) => {
+    const getEntityId = async () => {
+        const result = await api("/entities", {method: 'POST', body: JSON.stringify({name: entity})});
+        return result.id;
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
+        const entityId = await getEntityId()
+        if (entityId < 0) {
+            window.alert("Please select a valid entity or add a new one.")
+        } else if (category < 0) {
+            window.alert("Please select a valid category.")
+        } else if (amount < 0) {
+            window.alert("Amount cannot be less than 0.")
+        } else {
+            await api(("/transactions?id=" + transaction), {method: 'PUT', body: JSON.stringify({category_id: category, entity_id: entityId, amount: amount, transaction_date: date})}).then(() => {
+                // TODO: reload page, implement once routes are added.
+            })
+        }
         onClose()
     }
 
@@ -43,7 +73,7 @@ export default function EditTransactionPopup({transaction, onClose}) {
 
                     <input
                         className="field"
-                        type="text"
+                        type="date"
                         placeholder="Date (DD/MM/YYYY)"
                         value={date}
                         onChange={(e) => setDate(e.target.value)}
@@ -53,8 +83,8 @@ export default function EditTransactionPopup({transaction, onClose}) {
                         className={"field"}
                         type={"text"}
                         placeholder={"Vendor"}
-                        value={vendor}
-                        onChange={(e) => setVendor(e.target.value)}
+                        value={entity}
+                        onChange={(e) => setEntity(e.target.value)}
                     />
 
                     <select
@@ -62,10 +92,9 @@ export default function EditTransactionPopup({transaction, onClose}) {
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
                     >
-                        <option value="">Category</option>
-                        <option value="food">Food</option>
-                        <option value="transport">Transport</option>
-                        <option value="entertainment">Entertainment</option>
+                        {categories.map((category) => (
+                            <option value={category.id}>{category.name}</option>
+                        ))}
                     </select>
 
                     <button
