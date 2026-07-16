@@ -1,17 +1,27 @@
 import {useState, useEffect} from 'react'
 import {api} from '../api'
 import "./AddTransaction.css"
+import {useCategories} from "../contexts/CategoryContext.jsx";
+import {useEntities} from "../contexts/EntitiesContext.jsx";
 
 export default function AddTransaction({setTransaction}) {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [vendor, setVendor] = useState("");
     const [category, setCategory] = useState("");
+    const [entities, setEntities] = useState([])
+    const categories = useCategories();
+
+    useEffect(() => {
+        api('/entities').then(setEntities)
+    }, [])
 
     const submitTransaction = () => {
         // Convert category and entity to IDs
         api("/transactions", {method: 'POST', body: JSON.stringify({category_id: 1, entity_id: 3, amount: amount, transaction_date: date})}).then()
     }
+
+    console.log(entities)
 
     return (
         <div id={"form-div"}>
@@ -55,9 +65,9 @@ export default function AddTransaction({setTransaction}) {
                         onChange={(e) => setCategory(e.target.value)}
                     >
                         <option value="">Select One</option>
-                        <option value="food">Food</option>
-                        <option value="transport">Transport</option>
-                        <option value="entertainment">Entertainment</option>
+                        {categories.map((category) => (
+                            <option value={category.id}>{category.name}</option>
+                            ))}
                     </select>
                 </div>
 

@@ -7,7 +7,7 @@ export function CategoriesProvider({children}) {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        api("./categories").then(setCategories)
+        api("/categories").then(setCategories)
     }, []);
 
     return (

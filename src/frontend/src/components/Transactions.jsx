@@ -12,15 +12,15 @@ export default function Transactions() {
     api('/transactions').then(setTransactions)
   }, [])
 
-
-    console.log(transactions)
-
   return (
     <div>
       <h2>Transactions</h2>
         <div id={"transaction-page-layout"}>
             <AddTransaction/>
-            <TransactionsTable rows={transactions}/>
+            <TransactionsTable
+                rows={transactions}
+                onDelete={(id) => setTransactions(transactions.filter(t => t.id !== id))}
+            />
         </div>
     </div>
   )
