@@ -2,7 +2,6 @@ import {useState, useEffect} from 'react'
 import {api} from '../api'
 import "./AddTransaction.css"
 import {useCategories} from "../contexts/CategoryContext.jsx";
-import {useEntities} from "../contexts/EntitiesContext.jsx";
 
 export default function AddTransaction({setTransaction}) {
     const [amount, setAmount] = useState("");
