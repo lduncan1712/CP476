@@ -15,7 +15,6 @@ export default function EditTransactionPopup({transaction, onClose}) {
     useEffect(() => {
         if (transaction) {
             api(('/transactions?id=' + transaction)).then(result => {
-                console.log(result[0])
                 if (result.length !== 1) {
                     window.alert("An error occurred");
                     onClose()
