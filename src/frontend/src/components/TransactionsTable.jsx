@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './TransactionTable.css'
 import EditTransactionPopup from "./EditTransactionPopup.jsx";
+import {api} from "../api.js";
 
 /* Transaction table component.
 * Pass rows of transaction data to use.
@@ -8,14 +9,18 @@ import EditTransactionPopup from "./EditTransactionPopup.jsx";
 * When connected to the API, should also pass row.id, so that transactions can be edited and deleted.
 */
 
-export default function TransactionsTable({ rows: transactions = [] }) {
+export default function TransactionsTable({ rows: transactions = [], onDelete }) {
     const [selectedTransaction, setSelectedTransaction] = useState("")
     const [editDialogOpen, setEditDialogOpen] = useState(false)
 
     const deleteTransaction = (transaction) => {
         const confirm = window.confirm('Are you sure you want to delete this transaction?')
         if (confirm) {
-            // API Call stub
+            api(("/transactions?id=" + transaction.id), {method: 'DELETE'}).then(() => {
+                onDelete(transaction.id)
+            }).catch(err =>{
+                alert("Failed to delete transaction. Please try again." + err)
+        })
         }
     }
 
@@ -32,8 +37,8 @@ export default function TransactionsTable({ rows: transactions = [] }) {
                 </tr>
                 </thead>
                 <tbody>
-                {transactions.map((row, index) => (
-                    <tr key={index}>
+                {transactions.map((row) => (
+                    <tr key={row.id}>
                         <td className="amount">{row.amount}</td>
                         <td className="date">{row.transaction_date}</td>
                         <td className="vendor">{row.entity_name}</td>
@@ -43,7 +48,7 @@ export default function TransactionsTable({ rows: transactions = [] }) {
                                 className="btn btn-edit"
                                 onClick={() => {
                                     setEditDialogOpen(true)
-                                    setSelectedTransaction(transactions[index])
+                                    setSelectedTransaction(row.id)
                                 }}
                             >
                                 Edit
