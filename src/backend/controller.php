@@ -278,17 +278,14 @@ function select_entities(PDO $db, int $user_id, array $params): array {
  * @return array|false
  */
 function create_user(PDO $db, array $body): array|false {
-    require_fields($body, ['name']);
-
-    // Whitelist: Only Allow 'name', Ignore Any Other Submitted Columns (e.g. id, created_on)
-    $clean = ['name' => trim($body['name'])];
+    require_fields($body, ['name', 'username', 'password']);
 
     $statement = $db->prepare(
-        'INSERT INTO users' . get_cols($clean) .
-        'VALUES ' . get_params($clean) .
-        'RETURNING *'
+        'INSERT INTO users' . get_cols($body) .
+        'VALUES ' . get_params($body) .
+        'RETURNING id'
     );
-    $statement->execute($clean);
+    $statement->execute($body);
     return $statement->fetch();
 }
 
@@ -320,8 +317,7 @@ function update_user(PDO $db, int $user_id, array $body): array|false {
 
     // Whitelist The Editable Fields + Always Bump updated_on
     $clean = [
-        'name'       => trim($body['name']),
-        'updated_on' => date('Y-m-d'),
+        'name'       => trim($body['name'])
     ];
 
     $statement = $db->prepare(
@@ -350,6 +346,30 @@ function delete_user(PDO $db, int $user_id): array|false {
     return $statement->fetch();
 }
 
+
+
+function login_user(PDO $db, array $body): array {
+    require_fields($body, ['username', 'password']);
+
+    $statement = $db->prepare(
+        'SELECT id FROM users WHERE username = :username AND password = :password'
+    );
+    $statement->execute($body);
+
+    $response = $statement->fetch();
+
+    if ($response) {
+
+        $token = base64_encode(json_encode(['user_id' => $response['id']]));
+        http_response_code(200);
+        echo json_encode(['token' => $token]);
+        exit;
+
+    } else {
+        respond_error(401, 'Invalid Account Details');
+    }
+
+}
 
 
 

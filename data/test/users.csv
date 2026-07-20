@@ -1,6 +1,6 @@
-id,name
-1, John Doe
-2, Jane Doe
-3, Jim Doe
-4, Joe Doe
-5, Jill Doe
+id,name,username,password
+1, John Doe,username,password
+2, Jane Doe,jane,jane
+3, Jim Doe, jim, 1234
+4, Joe Doe, joe, 123456
+5, Jill Doe, jill, jill

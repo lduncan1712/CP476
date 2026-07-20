@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS transaction_categories(
 CREATE TABLE IF NOT EXISTS users(
     id                     SERIAL PRIMARY KEY,
     name                   VARCHAR(255) NOT NULL,
+    username               VARCHAR(100) NOT NULL UNIQUE,
+    password               VARCHAR(100) NOT NULL,
     created_on             DATE NOT NULL DEFAULT CURRENT_DATE,
     updated_on             DATE NOT NULL DEFAULT CURRENT_DATE,
     current_to             DATE
@@ -102,7 +104,7 @@ CREATE OR REPLACE TRIGGER trg_transactions_update_user
 
 COPY transaction_categories (id, name) FROM '/docker-entrypoint-initdb.d/seed/transaction_categories.csv' WITH (FORMAT CSV, HEADER true);
 COPY budget_durations (id, name, days) FROM '/docker-entrypoint-initdb.d/seed/budget_durations.csv' WITH (FORMAT CSV, HEADER true);
-COPY users (id, name) FROM '/docker-entrypoint-initdb.d/test/users.csv' WITH (FORMAT CSV, HEADER true);
+COPY users (id, name, username, password) FROM '/docker-entrypoint-initdb.d/test/users.csv' WITH (FORMAT CSV, HEADER true);
 COPY entities (id, name) FROM '/docker-entrypoint-initdb.d/test/entities.csv' WITH (FORMAT CSV, HEADER true);
 COPY transactions (category_id, user_id, entity_id, amount, transaction_date) FROM '/docker-entrypoint-initdb.d/test/transactions.csv' WITH (FORMAT CSV, HEADER true);
 
