@@ -77,5 +77,5 @@ As well as frontend design using [Wireframes](https://www.figma.com/design/5NRWM
    | Backend  | http://localhost:8080/health.php | Status 200 |
    | Database (Seeded) | ./tests/select_categories.sh | Returns Table Data |
 4. To access the application, enter the following credentials into the login page:
-   Username: username
+   Username: user
    Password: password

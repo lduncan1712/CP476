@@ -78,7 +78,7 @@ function route(): void {
     $header  = apache_request_headers()['Authorization'] ?? '';
     $token = substr($header, 7);
     $decoded = json_decode(base64_decode($token), true);
-    $user_id = is_array($decoded) ? (int) ($decoded['user_id'] ?? 0) : 0;
+    $user_id = (int) $decoded['user_id'];
 
     switch($path) {
         case '/transactions':
@@ -119,13 +119,6 @@ function route(): void {
         case '/categories':
             switch($method){
                 case 'GET': respond_any(select_categories($db, $user_id));
-                default: respond_error(405, "Method Not Allowed");
-            }
-            break;
-
-        case '/login':
-            switch($method){
-                case 'POST': respond_one(login_user($db, $body));
                 default: respond_error(405, "Method Not Allowed");
             }
             break;

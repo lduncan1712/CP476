@@ -7,6 +7,8 @@ get_id() {
     echo $1 | grep -o '"id":[0-9]*' | grep -o '[0-9]*'
 }
 
+
+
 echo "POST TRANSACTION: "
 TRANSACTION=$(curl -s -X POST "$BASE_URL/transactions" \
     -H "$CONTENT" \
@@ -109,12 +111,10 @@ echo $(curl -s -X GET "$BASE_URL/entities" \
 
 
 echo "POST USER: "
-USERNAME="myusername_$(date +%s)"
 USER=$(curl -s -X POST "$BASE_URL/users" \
     -H "$CONTENT" \
     -H "$AUTH" \
-    -d "{\"name\": \"Test User\", \"username\": \"$USERNAME\", \"password\":\"mypassword\"}")
-ID=$(get_id $USER)
+    -d '{"name": "Test User"}')
 echo $USER
 
 echo "GET USER (self, from token): "
@@ -132,31 +132,6 @@ echo $(curl -s -X POST "$BASE_URL/users" \
     -H "$CONTENT" \
     -H "$AUTH" \
     -d '{}')
-
-
-echo "POST LOGIN (valid credentials): "
-echo $(curl -s -X POST "$BASE_URL/login" \
-    -H "$CONTENT" \
-    -d '{
-        "username": "username",
-        "password": "password"
-    }')
-
-echo "POST LOGIN (wrong password -> should 401): "
-echo $(curl -s -X POST "$BASE_URL/login" \
-    -H "$CONTENT" \
-    -d '{
-        "username": "username",
-        "password": "wrong"
-    }')
-
-echo "POST LOGIN (missing password -> should 400): "
-echo $(curl -s -X POST "$BASE_URL/login" \
-    -H "$CONTENT" \
-    -d '{
-        "username": "username"
-    }')
-
 
 
 

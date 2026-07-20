@@ -1,7 +1,6 @@
 //IMPORTS
 import { useState } from "react";
 import "./Login.css";
-import {api} from '../api';
 
 //LOGIN COMPONENT
 const Login = ({ onLogin }) => {
@@ -10,22 +9,17 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState("");
 
   //FORM VALIDATION
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-
-    const response = await api("/login", {
-        method: 'POST', 
-        body: JSON.stringify({username: username, password: password})
-    });
-
-    if (response.error) {
-      setError(response.error);
-      return;
-    }
-
-    localStorage.setItem('token', response.token);
-    setError("");
-    onLogin();
+    const isUsernameValid = username === "user";
+    const isPasswordValid = password === "password";
+    if (!isUsernameValid) 
+    { setError("Unrecognized username, try again");
+      return; }
+    else if (!isPasswordValid) { setError("Incorrect password, try again");
+      return; }
+    else {  setError("");
+             onLogin(); }
   }
 
 // USER INTERFACE
