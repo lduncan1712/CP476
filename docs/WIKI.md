@@ -108,7 +108,7 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
     - Look at CP476B-S26 - Project Outline -> Milestone 02 – Front-End Implementation & Database Design -> Deliverables and Rubric
     - Plan deliverables to be started and updated for the next meeting.
 
-- **Further team understanding working with GitHub and Docker**
+- **Further team understanding of working with GitHub and Docker**
     - Push/pull requests, branches, committing, testing, approval, etc.
     - Troubleshoot Docker Desktop and linking with GitHub repo.
  
@@ -157,3 +157,24 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
     - Already created clear steps to run locally from a clean machine setup (including any environment/config notes).
     - Need to double-check we are not missing anything.
 - **Plan next meeting**: Tuesday, Jul 14 after class to discuss progress, challenges, concerns, etc.
+
+## July 19th, 2026 (25 minutes)
+#### Minutes:
+- Check-in to discuss Milestone #03 progress
+- **Back-end:**
+	- Progress check for the backend team
+   	- Work on connecting backend to front-end pages
+	- Everyone from the connection team (4 people) is currently working on linking the backend to their previously assigned frontend page
+- **Testing:**
+  	- Test plan is clearly outlined in an Excel document which lists: test case, story ID, user story title, test scenario, preconditions, test steps, expected result, priority, status (pass/fail/blocked), and issues/limitations
+	- 39 test cases proposed
+	- Awaiting confirmation from the connections team before proceeding with tests
+- **Reporting**
+	- GitHub Kanban continuously updated as team progresses through the milestone
+	- Activity blog updated to reflect recent meetings
+	- Preparing final wiki reflection summarizing progress over the term
+	- Preparing presentation artifact
+- **Plan next meeting(s)**: 
+	- Meeting on July 20th for backend team - trying to finish backend before Tuesday meeting
+	- Meeting on July 21st for whole team 
+	- Discuss team availability for Final Demo video later this week
