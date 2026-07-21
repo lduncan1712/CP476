@@ -12,6 +12,8 @@ function daysLeft(budgetEnd) {
 export default function Landing() {
     const [transactions, setTransactions] = useState([]);
     const [budgets, setBudgets] = useState([]);
+    const [totalAmount, setTotalAmount] = useState(0);
+    const [totalSpent, setTotalSpent] = useState(0);
 
     // Today's date
     const today = new Date().toLocaleDateString("en-US", {
@@ -46,6 +48,8 @@ export default function Landing() {
                         }))
                 )
             ).then((budgets) => {
+                setTotalAmount(budgets.reduce((sum, b) => sum + Number(b.amount), 0));
+                setTotalSpent(budgets.reduce((sum, b) => sum + b.total_spent, 0));
                 const sorted = budgets
                     .sort((a, b) => (b.total_spent / b.amount) - (a.total_spent / a.amount))
                     .slice(0, 3);
@@ -70,9 +74,9 @@ export default function Landing() {
             <div className="overall-budget">
                 <BudgetCard
                     category="Overall Spending"
-                    amount={1000}
-                    spent={600}
-                    days_left={4}
+                    amount={totalAmount}
+                    spent={totalSpent}
+                    days_left={null}
                 />
             </div>
 
