@@ -45,9 +45,10 @@ export default function EditTransactionPopup({transaction, onClose}) {
         } else if (amount < 0) {
             window.alert("Amount cannot be less than 0.")
         } else {
-            await api(("/transactions?id=" + transaction), {method: 'PUT', body: JSON.stringify({category_id: category, entity_id: entityId, amount: amount, transaction_date: date})}).then(() => {
-                // TODO: reload page, implement once routes are added.
-            })
+            const response = await api(("/transactions?id=" + transaction), {method: 'PUT', body: JSON.stringify({category_id: category, entity_id: entityId, amount: amount, transaction_date: date})})
+            if (response.error) {
+                window.alert(response.error)
+            }
         }
         onClose()
     }

@@ -16,7 +16,7 @@ export default function Transactions() {
     <div>
       <h2>Transactions</h2>
         <div id={"transaction-page-layout"}>
-            <AddTransaction/>
+            <AddTransaction onAdd={(t) => setTransactions([...transactions, t])}/>
             <TransactionsTable
                 rows={transactions}
                 onDelete={(id) => setTransactions(transactions.filter(t => t.id !== id))}

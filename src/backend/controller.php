@@ -315,9 +315,9 @@ function select_budgets(PDO $db, int $user_id, array $params): array {
  * @return array|false
  */
 function create_entity(PDO $db, int $user_id, array $body): array|false {
-    $body['name'] = strtoupper($body['name']);
+    $body['name'] = strtoupper(trim($body['name']));
 
-    $check_name = $db->prepare('SELECT id FROM entities WHERE name = :name');
+    $check_name = $db->prepare('SELECT id FROM entities WHERE UPPER(TRIM(name)) = UPPER(TRIM(:name))');
     $check_name->execute(['name' => $body['name']]);
     if ($check_name->fetch()) {
         http_response_code(409);

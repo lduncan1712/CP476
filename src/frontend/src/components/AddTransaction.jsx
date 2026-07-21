@@ -3,7 +3,7 @@ import {api} from '../api'
 import "./AddTransaction.css"
 import {useCategories} from "../contexts/CategoryContext.jsx";
 
-export default function AddTransaction({setTransaction}) {
+export default function AddTransaction({onAdd}) {
     const [amount, setAmount] = useState("");
     const [date, setDate] = useState("");
     const [selectedEntity, setSelectedEntity] = useState("");
@@ -31,9 +31,12 @@ export default function AddTransaction({setTransaction}) {
         } else if (amount < 0) {
             window.alert("Amount cannot be less than 0.")
         } else {
-            await api("/transactions", {method: 'POST', body: JSON.stringify({category_id: category, entity_id: entityId, amount: amount, transaction_date: date})}).then(() => {
-                // TODO: reload page, implement once routes are added.
-            })
+            const response = await api("/transactions", {method: 'POST', body: JSON.stringify({category_id: category, entity_id: entityId, amount: amount, transaction_date: date})})
+            if (response.error) {
+                window.alert(response.error)
+            } else {
+                onAdd(response)
+            }
         }
     }
 
