@@ -4,3 +4,4 @@ id,name,username,password
 3, Jim Doe, jim, 1234
 4, Joe Doe, joe, 123456
 5, Jill Doe, jill, jill
+6, DemoUser, demo, pass

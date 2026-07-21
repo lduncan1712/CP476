@@ -9,30 +9,42 @@ const Login = ({ onLogin }) => {
   const [password, set_password] = useState("");
   const [error, setError] = useState("");
 
-  //FORM VALIDATION
-  const handleSubmit = async (event) => {
-    event.preventDefault();
 
-    const response = await api("/login", {
-        method: 'POST', 
-        body: JSON.stringify({username: username, password: password})
+  const submit = async (path, body) => {
+
+    //Endpoint Call
+    const response = await api(path, {
+      method: 'POST',
+      body: JSON.stringify(body)
     });
 
+    //Display Error If Raised
     if (response.error) {
       setError(response.error);
       return;
     }
 
+    //Set Token
     localStorage.setItem('token', response.token);
     setError("");
     onLogin();
+  }
+
+  const handleLogin = (event) => {
+    event.preventDefault();
+    submit("/login", { username: username, password: password });
+  }
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    submit("/users", { name: username, username: username, password: password });
   }
 
 // USER INTERFACE
   return (
     <div className="login-page">
       <div className="title">Budget App</div>
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           type="text"
           placeholder="Username:"
@@ -47,7 +59,10 @@ const Login = ({ onLogin }) => {
           onChange={(e) => set_password(e.target.value)}
         />
 
-        <button type="submit">Sign In</button>
+         <div className="button-row">
+          <button type="button" onClick={handleLogin}>Login</button>
+          <button type="button" onClick={handleCreate}>Create Account</button>
+        </div>
         {error && <p className="error">{error}</p>}
         
       </form>

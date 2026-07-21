@@ -49,11 +49,16 @@ function require_fields(array $body, array $required): void {
 
 
 /**
- * ==================================================
- *  ENDPOINTS BELOW
- * ==================================================
+ * Creates A New Transaction For Token Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $body 
+ * @return array|false
  */
 function create_transaction(PDO $db, int $user_id, array $body): array|false {
+    require_fields($body, ['category_id', 'entity_id', 'amount', 'transaction_date']);
+
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -72,8 +77,17 @@ function create_transaction(PDO $db, int $user_id, array $body): array|false {
     return $statement->fetch();
 }
 
-function update_transaction(PDO $db, int $user_id, array $params, array $body): array|false
-{
+
+/**
+ * Updates A Transaction Owned For Token Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @param array $body  
+ * @return array|false
+ */
+function update_transaction(PDO $db, int $user_id, array $params, array $body): array|false {
     $statement = $db->prepare(
         'WITH row AS (
             UPDATE transactions SET ' . get_pairs($body) .
@@ -95,8 +109,18 @@ function update_transaction(PDO $db, int $user_id, array $params, array $body): 
     return $statement->fetch();
 }
 
-function delete_transaction(PDO $db, int $user_id, array $params): array|false
-{
+
+/**
+ * Deletes A Transaction For The Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @return array|false
+ */
+function delete_transaction(PDO $db, int $user_id, array $params): array|false {
+    require_fields($params, ['id']);
+
     $statement = $db->prepare(
         'WITH row AS (
             DELETE FROM transactions
@@ -117,6 +141,16 @@ function delete_transaction(PDO $db, int $user_id, array $params): array|false
     return $statement->fetch();
 }
 
+
+
+/**
+ * Selects Transactions Owned By The Authenticated User, With Optional Filters
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @return array
+ */
 function select_transactions(PDO $db, int $user_id, array $params): array {
     $params['user_id']     = $user_id;
     $params['id']          = (int)($params['id']          ?? 0);
@@ -149,8 +183,17 @@ function select_transactions(PDO $db, int $user_id, array $params): array {
     return $statement->fetchAll();
 }
 
-function create_budget(PDO $db, int $user_id, array $body): array|false
-{
+/**
+ * Creates A New Budget For The Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $body 
+ * @return array|false
+ */
+function create_budget(PDO $db, int $user_id, array $body): array|false {
+    require_fields($body, ['category_id', 'duration_id', 'amount', 'budget_start']);
+
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -169,6 +212,15 @@ function create_budget(PDO $db, int $user_id, array $body): array|false
     return $statement->fetch();
 }
 
+/**
+ * Updates A Budget Owned By The Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @param array $body  
+ * @return array|false
+ */
 function update_budget(PDO $db, int $user_id, array $params, array $body): array|false {
     $statement = $db->prepare(
         'WITH row AS (
@@ -191,8 +243,18 @@ function update_budget(PDO $db, int $user_id, array $params, array $body): array
     return $statement->fetch();
 }
 
-function delete_budget(PDO $db, int $user_id, array $params): array|false
-{
+
+/**
+ * Deletes A Budget Owned By The Authenticated User
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @return array|false
+ */
+function delete_budget(PDO $db, int $user_id, array $params): array|false {
+    require_fields($params, ['id']);
+
     $statement = $db->prepare(
         'WITH row AS (
             DELETE FROM budgets
@@ -213,8 +275,16 @@ function delete_budget(PDO $db, int $user_id, array $params): array|false
     return $statement->fetch();
 }
 
-function select_budgets(PDO $db, int $user_id, array $params): array
-{
+
+/**
+ * Selects Budgets Owned By The Authenticated User, With Optional Filters
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params 
+ * @return array
+ */
+function select_budgets(PDO $db, int $user_id, array $params): array {
     $params['category_id'] = (int)($params['category_id'] ?? 0);
     $params['id'] = (int)($params['id'] ?? 0);
     $params['user_id'] = $user_id;
@@ -234,20 +304,62 @@ function select_budgets(PDO $db, int $user_id, array $params): array
     return $statement->fetchAll();
 }
 
-
+/**
+ * Creates A New Entity 
+ * 
+ * Note: (Rejects Duplicate Names)
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $body  
+ * @return array|false
+ */
 function create_entity(PDO $db, int $user_id, array $body): array|false {
     $body['name'] = strtoupper($body['name']);
 
+    $check_name = $db->prepare('SELECT id FROM entities WHERE name = :name');
+    $check_name->execute(['name' => $body['name']]);
+    if ($check_name->fetch()) {
+        http_response_code(409);
+        echo json_encode(['error' => 'Entity with this name already exists']);
+        exit;
+    } else {
+
+        $statement = $db->prepare(
+            'INSERT INTO entities ' . get_cols($body) .
+            ' VALUES ' . get_params($body) .
+            ' RETURNING *'
+        );
+        $statement->execute($body);
+        return $statement->fetch();
+    }
+}
+
+/**
+ * Deletes An Entity By Id
+ *
+ * @param PDO $db
+ * @param array $params 
+ * @return array|false
+ */
+function delete_entity(PDO $db, int $user_id, array $params): array|false {
+    require_fields($params, ['id']);
+
     $statement = $db->prepare(
-        'INSERT INTO entities ' . get_cols($body) .
-        ' VALUES ' . get_params($body) .
-        ' ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name' .
-        ' RETURNING *'
+        'DELETE FROM entities WHERE id = :id RETURNING *'
     );
-    $statement->execute($body);
+    $statement->execute(['id' => (int)($params['id'] ?? 0)]);
     return $statement->fetch();
 }
 
+/**
+ * Selects Entities, With Optional Name/Id Filters
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @param array $params
+ * @return array
+ */
 function select_entities(PDO $db, int $user_id, array $params): array {
     $params['name'] = $params['name'] ?? '';
     $params['id'] = (int)($params['id'] ?? 0);
@@ -263,30 +375,36 @@ function select_entities(PDO $db, int $user_id, array $params): array {
     return $statement->fetchAll();
 }
 
-
 /**
- * ==================================================
- *  USER ENDPOINTS
- * ==================================================
- */
-
-/**
- * Creates A New User (Sign Up)
+ * Creates A New User
  *
  * @param PDO $db
- * @param array $body  expects { name }
+ * @param array $body
  * @return array|false
  */
 function create_user(PDO $db, array $body): array|false {
     require_fields($body, ['name', 'username', 'password']);
 
-    $statement = $db->prepare(
-        'INSERT INTO users' . get_cols($body) .
-        'VALUES ' . get_params($body) .
-        'RETURNING id'
-    );
-    $statement->execute($body);
-    return $statement->fetch();
+    $username_check = $db->prepare('SELECT id FROM users WHERE username = :username');
+    $username_check->execute(['username' => $body['username']]);
+
+    if ($username_check->fetch()) {
+        respond_error(409, 'Username Taken');
+    } else {
+
+        $statement = $db->prepare(
+            'INSERT INTO users' . get_cols($body) .
+            'VALUES ' . get_params($body) .
+            'RETURNING id'
+        );
+        $statement->execute($body);
+        $user =  $statement->fetch();
+
+        $token = base64_encode(json_encode(['user_id' => $user['id']]));
+        http_response_code(200);
+        echo json_encode(['token' => $token]);
+        exit;
+    }
 }
 
 /**
@@ -309,7 +427,7 @@ function select_user(PDO $db, int $user_id): array|false {
  *
  * @param PDO $db
  * @param int $user_id
- * @param array $body  expects { name }
+ * @param array $body
  * @return array|false
  */
 function update_user(PDO $db, int $user_id, array $body): array|false {
@@ -332,6 +450,7 @@ function update_user(PDO $db, int $user_id, array $body): array|false {
 
 /**
  * Deletes The Authenticated User's Own Record
+ * 
  * NOTE: Will Fail (FK Constraint) If The User Still Has Transactions/Budgets
  *
  * @param PDO $db
@@ -347,7 +466,13 @@ function delete_user(PDO $db, int $user_id): array|false {
 }
 
 
-
+/**
+ * Authenticates A User And Returns A Token If Credentials Found
+ *
+ * @param PDO $db
+ * @param array $body
+ * @return array
+ */
 function login_user(PDO $db, array $body): array {
     require_fields($body, ['username', 'password']);
 
@@ -371,11 +496,14 @@ function login_user(PDO $db, array $body): array {
 
 }
 
-
-
-
-function select_categories(PDO $db, int $user_id): array
-{
+/**
+ * Selects All Transaction Categories
+ *
+ * @param PDO $db
+ * @param int $user_id
+ * @return array
+ */
+function select_categories(PDO $db, int $user_id): array {
     $statement = $db->prepare(
         "SELECT * FROM transaction_categories ORDER BY name"
     );

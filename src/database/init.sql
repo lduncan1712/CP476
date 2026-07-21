@@ -107,6 +107,7 @@ COPY budget_durations (id, name, days) FROM '/docker-entrypoint-initdb.d/seed/bu
 COPY users (id, name, username, password) FROM '/docker-entrypoint-initdb.d/test/users.csv' WITH (FORMAT CSV, HEADER true);
 COPY entities (id, name) FROM '/docker-entrypoint-initdb.d/test/entities.csv' WITH (FORMAT CSV, HEADER true);
 COPY transactions (category_id, user_id, entity_id, amount, transaction_date) FROM '/docker-entrypoint-initdb.d/test/transactions.csv' WITH (FORMAT CSV, HEADER true);
+COPY budgets (user_id, category_id, amount, duration_id, budget_start, budget_end) FROM '/docker-entrypoint-initdb.d/test/budgets.csv' WITH (FORMAT CSV, HEADER true);
 
 SELECT setval('entities_id_seq', (SELECT MAX(id) FROM entities));
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
