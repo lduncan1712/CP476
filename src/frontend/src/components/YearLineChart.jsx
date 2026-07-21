@@ -79,7 +79,7 @@ export default function YearLineChart({ data }) {
         <div>
             <h3>Expenses throughout the Years</h3>
 
-            <svg width={width} height={height}>
+            <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
                 {/* Horizontal grid lines */}
                 {yTicks.map((tick) => {
                     const y =

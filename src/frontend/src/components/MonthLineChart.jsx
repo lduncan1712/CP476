@@ -213,6 +213,7 @@ export default function MonthlyLineChart({
         <svg
             width={width}
             height={height}
+            viewBox={`0 0 ${width} ${height}`}
         >
 
             {/* Horizontal grid */}

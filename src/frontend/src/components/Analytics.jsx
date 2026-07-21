@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react'
 import { api } from '../api'
-// import line_graph from '../assets/line_graph.png';
-// import line_with_overlay from '../assets/line_with_overlay.png';
-// import yearview_graph from '../assets/yearview_graph.png';
-// import piechart from '../assets/piechart.png';
 import YearLineChart from "./YearLineChart";
 import MonthLineChart from "./MonthLineChart";
 import PieChart from "./PieChart";
@@ -15,99 +11,163 @@ export default function Analytics() {
     const now = new Date()
     const monthDay = now.toLocaleDateString('en-US', {month: 'long', year: 'numeric'});
 
-    // Get data
+    // ---------------------------------------------------------
+    // Pull data from the backend (same pattern as Transactions.jsx)
+    // ---------------------------------------------------------
     const [transactions, setTransactions] = useState([])
+    const [budgets, setBudgets] = useState([])
+    const [categories, setCategories] = useState([])
+
     useEffect(() => {
         api('/transactions').then(setTransactions)
+        api('/budgets').then(setBudgets)
+        api('/categories').then(setCategories)
     }, [])
 
-    // Data is hard-coded for now
-    const totalBudget = 200;
-    // Data split by category for this current month
-    const categoryData = [
-        { category: "Groceries", amount: 32.55},
-        { category: "Transportation", amount: 300.52},
-        { category: "Clothing", amount: 38.25},
-        { category: "Utilities", amount: 170.02},
-        { category: "Entertainment", amount: 65.57}
-    ];
-    // Data by day (most granular form)
-    const dailyData = [{ transactionDate: new Date("9/10/2023"), amount: 32.55, category_id:  "Transportation" },
-    { transactionDate: new Date("9/11/2023"), amount: 300.52, category_id:  "Transportation" },
-    { transactionDate: new Date("9/22/2023"), amount: 38.25, category_id:  "Transportation" },
-    { transactionDate: new Date("10/23/2024"), amount: 50.02, category_id:  "Transportation" },
-    { transactionDate: new Date("9/10/2025"), amount: 32.55, category_id:  "Clothing" },
-    { transactionDate: new Date("9/11/2025"), amount: 300.52, category_id:  "Entertainment" },
-    { transactionDate: new Date("9/22/2025"), amount: 38.25, category_id:  "Utilities" },
-    { transactionDate: new Date("10/10/2025"), amount: 15.55, category_id:  "Clothing" },
-    { transactionDate: new Date("10/23/2025"), amount: 50.02, category_id:  "Groceries" },
-    { transactionDate: new Date("11/1/2025"), amount: 170.02, category_id:  "Clothing" },
-    { transactionDate: new Date("6/2/2026"), amount: 10.0, category_id:  "Entertainment" },
-    { transactionDate: new Date("6/12/2026"), amount: 10.0, category_id:  "Groceries" },
-    { transactionDate: new Date("6/1/2026"), amount: 10.0, category_id:  "Transportation" },
-    { transactionDate: new Date("5/1/2026"), amount: 25.00, category_id:  "Transportation" },
-    { transactionDate: new Date("6/23/2026"), amount: 30.00, category_id:  "Groceries" },
-    { transactionDate: new Date("5/20/2026"), amount: 40.00, category_id:  "Clothing" }];
+    // ---------------------------------------------------------
+    // Normalize transactions
+    // The backend sends amount as a string (Postgres DECIMAL over JSON)
+    // and transaction_date as a "YYYY-MM-DD" string, so convert both
+    // once here instead of everywhere they're used.
+    // ---------------------------------------------------------
+    const normalizedTransactions = transactions.map(t => ({
+        ...t,
+        amount: parseFloat(t.amount),
+        transactionDate: new Date(t.transaction_date),
+    }));
 
-    // Filtered data for this month
-    const currentMonthData = dailyData.filter(item => {
-        const date = item.transactionDate;
+    // The chart components (MonthLineChart, YearLineChart, PieChart) were
+    // built against fake data shaped like:
+    //   { transactionDate: Date, amount: number, category_id: <category NAME string> }
+    // "category_id" holding a name (not the numeric FK) is a leftover misnomer
+    // from the placeholder data, but the chart files read that exact field,
+    // so we match it here rather than editing three chart files.
+    const chartData = normalizedTransactions.map(t => ({
+        ...t,
+        category_id: t.category_name,
+    }));
+
+    // ---------------------------------------------------------
+    // Normalize budgets
+    // ---------------------------------------------------------
+    const normalizedBudgets = budgets.map(b => ({
+        ...b,
+        amount: parseFloat(b.amount),
+        budget_start: new Date(b.budget_start),
+        budget_end: b.budget_end ? new Date(b.budget_end) : null,
+    }));
+
+    // Only budgets whose date range covers today
+    const activeBudgets = normalizedBudgets.filter(b =>
+        b.budget_start <= now && (!b.budget_end || b.budget_end >= now)
+    );
+
+    // An "overall" budget has no category attached (category_id is null)
+    const overallBudget = activeBudgets.find(b => b.category_id === null);
+    const totalBudget = overallBudget ? overallBudget.amount : null;
+
+    // Map numeric category_id -> name, for matching per-category budgets
+    // (GET /budgets doesn't join category name the way /transactions does)
+    const categoryIdToName = Object.fromEntries(categories.map(c => [c.id, c.name]));
+
+    // ---------------------------------------------------------
+    // Filter transactions to this month / last month
+    // ---------------------------------------------------------
+    const currentMonthData = normalizedTransactions.filter(t => {
+        const date = t.transactionDate;
         return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
     });
 
-    // Filtered data for last month
-    const lastMonthData = dailyData.filter(item => {
-        const date = item.transactionDate;
-        return date.getMonth() === (now.getMonth() - 1) && date.getFullYear() === now.getFullYear();
+    // Using the Date constructor here (instead of raw getMonth() - 1) so
+    // January correctly rolls back to December of the previous year.
+    const lastMonthRef = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthData = normalizedTransactions.filter(t => {
+        const date = t.transactionDate;
+        return date.getMonth() === lastMonthRef.getMonth() && date.getFullYear() === lastMonthRef.getFullYear();
     });
 
-    // Get statistics
-    var monthExpenses = 0;
-    var lastMonthExpenses = 0;
-    var maxExpense = 0;
-    var maxExpenseCatAmount = 0;
-    var maxExpenseDate;
-    var maxExpenseCat;
-    var month_difference_pct = 0;
-    var maxIncreaseCat = "Utilities";
-    var maxIncreasePct = "2%";
-    var maxDecreaseCat = "Groceries";
-    var maxDecreasePct = "13%";
+    // ---------------------------------------------------------
+    // Group each month's transactions by category
+    // ---------------------------------------------------------
+    function groupByCategory(items) {
+        const totals = {};
+        for (const t of items) {
+            totals[t.category_name] = (totals[t.category_name] || 0) + t.amount;
+        }
+        return totals;
+    }
 
-    // Later: If time, implement for reusability
-    // function findMaxExpense() {
-    //     var maxExpense = 0;
-    //     var maxExpenseCat;
-    //     return [maxExpense, maxExpenseCat]
-    // }
+    const categoryTotals = groupByCategory(currentMonthData);
+    const lastMonthCategoryTotals = groupByCategory(lastMonthData);
 
-    // Calculate pct_overallbudget_used
-    for (let expense of categoryData) {
-        // Iterate to find max expense category
-        if (expense.amount > maxExpenseCatAmount) {
-            maxExpenseCatAmount = expense.amount;
-            maxExpenseCat = expense.category;
+    // ---------------------------------------------------------
+    // Overall stats for this month
+    // ---------------------------------------------------------
+    let monthExpenses = 0;
+    let maxExpense = 0;
+    let maxExpenseDate = null;
+    for (const t of currentMonthData) {
+        monthExpenses += t.amount;
+        if (t.amount > maxExpense) {
+            maxExpense = t.amount;
+            maxExpenseDate = t.transactionDate;
         }
     }
 
-    // Find date of this month with highest expenses
-    for (let expense of currentMonthData) {
-        // Calculate total expenses for this month for percentage calculation
-        monthExpenses += expense.amount;
+    let lastMonthExpenses = 0;
+    for (const t of lastMonthData) {
+        lastMonthExpenses += t.amount;
+    }
 
-        // Iterate to find max expense date
-        if (expense.amount > maxExpense) {
-            maxExpense = expense.amount;
-            maxExpenseDate = expense.transactionDate;
+    const percentUsed = totalBudget ? (monthExpenses / totalBudget * 100).toFixed(0) + "%" : null;
+
+    // Guarded against divide-by-zero when last month had no spending
+    const month_difference_pct = lastMonthExpenses > 0
+        ? 100 * (monthExpenses - lastMonthExpenses) / lastMonthExpenses
+        : (monthExpenses > 0 ? 100 : 0);
+
+    // Highest-spend category this month
+    let maxExpenseCat = null;
+    let maxExpenseCatAmount = 0;
+    for (const [category, amount] of Object.entries(categoryTotals)) {
+        if (amount > maxExpenseCatAmount) {
+            maxExpenseCatAmount = amount;
+            maxExpenseCat = category;
         }
     }
-    var percentUsed = (monthExpenses / totalBudget * 100).toFixed(0) + "%"
 
-    // Calculate month_difference_pct
-    for (let expense of lastMonthData) {
-        lastMonthExpenses += expense.amount;
+    // Biggest month-over-month % increase / decrease, per category
+    const touchedCategories = new Set([
+        ...Object.keys(categoryTotals),
+        ...Object.keys(lastMonthCategoryTotals),
+    ]);
+
+    let maxIncreaseCat = null, maxIncreasePct = 0;
+    let maxDecreaseCat = null, maxDecreasePct = 0;
+
+    for (const category of touchedCategories) {
+        const current = categoryTotals[category] || 0;
+        const prior = lastMonthCategoryTotals[category] || 0;
+        if (current === 0 && prior === 0) continue;
+
+        const pctChange = prior > 0 ? ((current - prior) / prior) * 100 : 100;
+
+        if (maxIncreaseCat === null || pctChange > maxIncreasePct) {
+            maxIncreaseCat = category;
+            maxIncreasePct = pctChange;
+        }
+        if (maxDecreaseCat === null || pctChange < maxDecreasePct) {
+            maxDecreaseCat = category;
+            maxDecreasePct = pctChange;
+        }
     }
-    month_difference_pct = 100 * (monthExpenses-lastMonthExpenses) / lastMonthExpenses
+
+    // Categories currently over their per-category budget
+    const overBudgetCategories = activeBudgets
+        .filter(b => b.category_id !== null)
+        .map(b => ({ name: categoryIdToName[b.category_id], amount: b.amount }))
+        .filter(b => (categoryTotals[b.name] || 0) > b.amount)
+        .map(b => b.name);
 
     // Use boolean states to track which chart settings are currently active
     const [isMonthview, setMonthview] = useState(true);
@@ -120,32 +180,39 @@ export default function Analytics() {
             <article class="analytics_card">
                 <figure id = "graph-summary">
                     {isMonthview ?
-                    <MonthLineChart data={dailyData} overlayOn={hasOverlay}></MonthLineChart> :
+                    <MonthLineChart data={chartData} overlayOn={hasOverlay}></MonthLineChart> :
                     <YearLineChart
-                     data={dailyData}
+                     data={chartData}
                      xLabel={"Year"}
                      />}
-                     
+
+                    <div class = "chart-controls">
+                        { // Show overlay option only for month graph
+                        isMonthview && (
+                        <span class = "line_graph_options">
+                            <label for = "overlay-check">Compare with last month</label>
+                            <input id = "overlay-check" type="checkbox" checked={hasOverlay} onChange={() => setOverlay(!hasOverlay)} />
+                        </span>)}
+                        <button type="button"
+                         className={`chart-toggle-btn ${isMonthview ? 'chart-no-overlay' : 'chart-overlay'}`}
+                         onClick={ // overlay option only available for monthview
+                            () => {setMonthview(!isMonthview); setOverlay(false)}
+                         }>
+                            Year-view
+                        </button>
+                    </div>
+
                     <figcaption>The above graph shows the total expenses over time, until this current day</figcaption>
                 </figure>
                 <div class = "card-content">
-                    { // Show overlay option only for month graph
-                    isMonthview ? (
-                    <>
-                        <h2>{monthDay}</h2>
-                        <label for = "overlay-check" class = "line_graph_options">Compare with last month</label>
-                        <input id = "overlay-check" type="checkbox" checked={hasOverlay} onChange={() => setOverlay(!hasOverlay)} class = "line_graph_options"/>
-                    </>) : (<h2>Your Expenses Through the Years</h2>)}
-                    <button type="button"
-                     className={`line_graph_options ${isMonthview ? 'chart-no-overlay' : 'chart-overlay'}`}
-                     onClick={ // overlay option only available for monthview
-                        () => {setMonthview(!isMonthview); setOverlay(false)}
-                     }>
-                        Year-view
-                    </button>
+                    <h2>{isMonthview ? monthDay : "Your Expenses Through the Years"}</h2>
                     <div class = "points">
                         <ul>
-                            <li>You have used up <strong>{percentUsed}</strong> of your budget so far (${monthExpenses.toFixed(2)} from ${totalBudget.toFixed(2)}).</li>
+                            {totalBudget ? (
+                                <li>You have used up <strong>{percentUsed}</strong> of your budget so far (${monthExpenses.toFixed(2)} from ${totalBudget.toFixed(2)}).</li>
+                            ) : (
+                                <li>No overall budget set for {monthDay} yet — you've spent <strong>${monthExpenses.toFixed(2)}</strong> so far.</li>
+                            )}
                             <li>Compared to last month's expenses, which totaled to <strong>${lastMonthExpenses.toFixed(2)}</strong>, you spent <strong>{Math.abs(month_difference_pct).toFixed(2)}% {month_difference_pct >= 0 ? "more":"less"}</strong></li>
                             </ul>
                     </div>
@@ -154,16 +221,28 @@ export default function Analytics() {
             <article class = "analytics_card">
                 <figure id = "breakdown_chart">
                     <h2>Month Breakdown</h2>
-                    <PieChart data={dailyData} />
+                    <PieChart data={chartData} />
                     <figcaption>This graph shows a breakdown of this month's expenses by category</figcaption>
                 </figure>
                 <div class = "card-content">
                     <div class = "points">
                         <ul>
-                            <li>You had the highest expenses in the <strong>{maxExpenseCat}</strong> category this month, with a total of <strong>${maxExpenseCatAmount.toFixed(2)}</strong>.</li>
-                            <li><strong>{maxIncreaseCat}</strong> has had the biggest increase in expenses this month, by <strong>{maxIncreasePct}</strong>.</li>                         
-                            <li><strong>{maxDecreaseCat}</strong> has had the biggest decrease in expenses this month, by <strong>{maxDecreasePct}</strong>.</li>
-                            <li>You are over budget in the following categories: <strong>Transportation, Groceries</strong>.</li>
+                            {maxExpenseCat ? (
+                                <li>You had the highest expenses in the <strong>{maxExpenseCat}</strong> category this month, with a total of <strong>${maxExpenseCatAmount.toFixed(2)}</strong>.</li>
+                            ) : (
+                                <li>No expenses recorded yet this month.</li>
+                            )}
+                            {maxIncreaseCat && (
+                                <li><strong>{maxIncreaseCat}</strong> has had the biggest increase in expenses this month, by <strong>{maxIncreasePct.toFixed(0)}%</strong>.</li>
+                            )}
+                            {maxDecreaseCat && (
+                                <li><strong>{maxDecreaseCat}</strong> has had the biggest decrease in expenses this month, by <strong>{Math.abs(maxDecreasePct).toFixed(0)}%</strong>.</li>
+                            )}
+                            {overBudgetCategories.length > 0 ? (
+                                <li>You are over budget in the following categories: <strong>{overBudgetCategories.join(", ")}</strong>.</li>
+                            ) : (
+                                <li>You're within budget in all categories that have a budget set.</li>
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -172,6 +251,3 @@ export default function Analytics() {
     </div>
   )
 }
-
-//<img src={hasOverlay ? line_graph : line_with_overlay} alt="Line graph" style={{ width: '400px', height: '250px', display: 'block', margin: '10px auto' }}/>//<li>Your expenses were highest on the date <strong>{maxExpenseDate}</strong> with a total of <strong>${maxExpense.toFixed(2)}</strong>.</li> {/*Individual budgets by ctaegory not yet linked */}
-                        
