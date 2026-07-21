@@ -70,7 +70,6 @@ As well as frontend design using [Wireframes](https://www.figma.com/design/5NRWM
     ```
     docker compose down -v
     docker compose up --build
-    docker compose exec frontend npm install react-router-dom
     ```
 3. (OPTIONAL): Upon completion of setup, use the below commands/links to confirm each layer of the stack has been properly setup and activated.
     | Layer | Test | Expected |
