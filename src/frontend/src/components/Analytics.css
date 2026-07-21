@@ -6,7 +6,11 @@
 }
 
 .points {
-  font-size: 24px;
+  font-size: clamp(16px, 1vw + 0.7rem, 24px);
+}
+
+.points li {
+  overflow-wrap: break-word;
 }
 
 .analytics_card {
@@ -15,9 +19,32 @@
 	margin: 10px;
   border-radius: 15px;
 	display:flex;
+  flex-wrap: wrap;
   gap: 30px;
   background: #ececec;
-  align-items: center;
+  align-items: flex-start;
+}
+
+#graph-summary, #breakdown_chart {
+  flex: 1 1 320px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#graph-summary svg, #breakdown_chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.card-content {
+  flex: 1 1 260px;
+  min-width: 220px;
+  max-width: 100%;
+}
+
+.card-content h2 {
+  font-size: clamp(1.1rem, 1vw + 1rem, 1.5rem);
 }
 
 .chart-overlay {
@@ -32,13 +59,34 @@
   background-color: #f5f5f5;
 }
 
+.chart-toggle-btn {
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 10px 16px;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
 .line_graph_options {
-  display:inline;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .month-line-graph-header {
-  display:flex;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-Items: "center";
-  margin-bottom: "10px";
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
