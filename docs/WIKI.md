@@ -43,7 +43,7 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 ##### Team building:
 - Discussed our long weekends. Lucas trimmed the flowers.
 
-### Tuesday, May 26th, 2026 (30 minutes)
+## Tuesday, May 26th, 2026 (30 minutes)
 ##### Minutes:
 - Received updates from each subteam
 - **Wireframe team updates:**
@@ -80,11 +80,9 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
             - Budget entities —> other side of the transaction.
         - Budget table design: Users can either create a new budget for the month or update the previous one.
         - Database team will get started with scaffolding what the data looks like in the repo
-
 - **User stories**: finish the updated list
     - Add difficulty rating for the user stories (based on Fibonacci sequence)
     - Need to add priority to each user story
-
 - **Definition of Done**
     - Gracie will create the "definition of done", in terms of finished parts of the web app
     - Will check if features meet their acceptance criteria.
@@ -112,7 +110,6 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
     - Push/pull requests, branches, committing, testing, approval, etc.
     - Troubleshoot Docker Desktop and linking with GitHub repo.
  
-
 ## June 25th, 2026 (30 minutes)
 #### Minutes:
 - Check in about Milestone #2
@@ -166,7 +163,7 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
    	- Work on connecting backend to front-end pages
 	- Everyone from the connection team (4 people) is currently working on linking the backend to their previously assigned frontend page
 - **Testing:**
-  	- Test plan is clearly outlined in an Excel document which lists: test case, story ID, user story title, test scenario, preconditions, test steps, expected result, priority, status (pass/fail/blocked), and issues/limitations
+  	- Test plan is clearly outlined in an Excel document which lists: test case, story ID, user story title, test scenario, preconditions, test steps, expected result, priority, status (pass/fail/blocked), result, defect id/notes, and issues/limitations
 	- 39 test cases proposed
 	- Awaiting confirmation from the connections team before proceeding with tests
 - **Reporting**
@@ -178,3 +175,26 @@ Our group has been meeting weekly after Tuesday class. The summary of these meet
 	- Meeting on July 20th for backend team - trying to finish backend before Tuesday meeting
 	- Meeting on July 21st for whole team 
 	- Discuss team availability for Final Demo video later this week
+ - **Team building**: World Cup - congrats Spain!
+
+## July 21st, 2026 (25 minutes)
+#### Minutes:
+- Check-in to discuss Milestone #03 progress
+- **Back-end:**
+	- Progress check for the backend team
+   	- Connection is almost finished
+- **Testing:**
+  	- Test plan and documentation are prepared and ready for execution
+	- Go over any ad-hoc errors/issues we ran into
+- **Reporting**
+	- Deployment/execution instructions (README) to be tested and finalized by Lucas
+	- GitHub Kanban continuously updated as team progresses through the milestone
+	- Final wiki reflection to be reviewed + any feedback
+    - Final Demo video slides to be reviewed + any feedback
+	- Presentation artifact to be reviewed + any feedback
+- **Final Demo video**: video plan outlined
+	- Split video into 10 parts, each assigned to one team member
+	- Set a rough time limitation for each section to meet the 10-minute limit
+	- Deadline: each member must have their part recorded and sent to Adam by 12 pm on Friday Jul, 24
+	- Adam to edit and merge the separate video clips into a single file.
+ - **Final submission**: Gracie to compose and submit final deliverables for Milestone #03
