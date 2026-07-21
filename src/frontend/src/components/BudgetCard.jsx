@@ -50,9 +50,12 @@ export default function BudgetCard({ category, amount, spent, days_left }) {
         <p className="summary-text">
           ${spent.toFixed(2)} of ${amount.toFixed(2)} spent. {bucket.message}
         </p>
-        <p className="summary-days">
-          Budget ends in: {days_left} day{days_left !== 1 ? 's' : ''}
-        </p>
+        {days_left ? (
+            <p className="summary-days">
+              Budget ends in: {days_left} day{days_left !== 1 ? 's' : ''}
+            </p>
+        ) : null}
+
       </div>
 
     </div>
