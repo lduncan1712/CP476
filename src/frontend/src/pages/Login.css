@@ -44,6 +44,17 @@ button {
   font-family: Arial, sans-serif;
 }
 
+.button-row {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  justify-content: center;
+}
+
+.button-row button {
+  margin: 0;
+}
+
 .error {
   color: #d94a4a;
   text-align: center;

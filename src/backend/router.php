@@ -101,8 +101,9 @@ function route(): void {
             break;
         case '/entities':
             switch($method){
-                case 'GET': respond_any(select_entities($db, $user_id, $params));
-                case 'POST':respond_one(create_entity($db, $user_id, $body));
+                case 'GET':    respond_any(select_entities($db, $user_id, $params));
+                case 'POST':   respond_one(create_entity($db, $user_id, $body));
+                case 'DELETE': respond_one(delete_entity($db, $user_id, $params));
                 default: respond_error(405, "Method Not Allowed");
             }
             break;

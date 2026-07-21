@@ -1,6 +1,7 @@
 //IMPORTS
 import { useState } from "react";
 import "./Login.css";
+import {api} from '../api';
 
 //LOGIN COMPONENT
 const Login = ({ onLogin }) => {
@@ -8,25 +9,42 @@ const Login = ({ onLogin }) => {
   const [password, set_password] = useState("");
   const [error, setError] = useState("");
 
-  //FORM VALIDATION
-  const handleSubmit = (event) => {
+
+  const submit = async (path, body) => {
+
+    //Endpoint Call
+    const response = await api(path, {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+
+    //Display Error If Raised
+    if (response.error) {
+      setError(response.error);
+      return;
+    }
+
+    //Set Token
+    localStorage.setItem('token', response.token);
+    setError("");
+    onLogin();
+  }
+
+  const handleLogin = (event) => {
     event.preventDefault();
-    const isUsernameValid = username === "user";
-    const isPasswordValid = password === "password";
-    if (!isUsernameValid) 
-    { setError("Unrecognized username, try again");
-      return; }
-    else if (!isPasswordValid) { setError("Incorrect password, try again");
-      return; }
-    else {  setError("");
-             onLogin(); }
+    submit("/login", { username: username, password: password });
+  }
+
+  const handleCreate = (event) => {
+    event.preventDefault();
+    submit("/users", { name: username, username: username, password: password });
   }
 
 // USER INTERFACE
   return (
     <div className="login-page">
       <div className="title">Budget App</div>
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           type="text"
           placeholder="Username:"
@@ -41,7 +59,10 @@ const Login = ({ onLogin }) => {
           onChange={(e) => set_password(e.target.value)}
         />
 
-        <button type="submit">Sign In</button>
+         <div className="button-row">
+          <button type="button" onClick={handleLogin}>Login</button>
+          <button type="button" onClick={handleCreate}>Create Account</button>
+        </div>
         {error && <p className="error">{error}</p>}
         
       </form>
