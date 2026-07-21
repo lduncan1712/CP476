@@ -78,7 +78,7 @@ function route(): void {
     $header  = apache_request_headers()['Authorization'] ?? '';
     $token = substr($header, 7);
     $decoded = json_decode(base64_decode($token), true);
-    $user_id = (int) $decoded['user_id'];
+    $user_id = (int) ($decoded['user_id'] ?? 0);
 
     switch($path) {
         case '/transactions':
@@ -113,6 +113,13 @@ function route(): void {
                 case 'POST':   respond_one(create_user($db, $body));
                 case 'PUT':    respond_one(update_user($db, $user_id, $body));
                 case 'DELETE': respond_one(delete_user($db, $user_id));
+                default: respond_error(405, "Method Not Allowed");
+            }
+            break;
+
+        case '/login':
+            switch($method){
+                case 'POST': respond_one(login_user($db, $body));
                 default: respond_error(405, "Method Not Allowed");
             }
             break;
