@@ -59,6 +59,10 @@ function require_fields(array $body, array $required): void {
 function create_transaction(PDO $db, int $user_id, array $body): array|false {
     require_fields($body, ['category_id', 'entity_id', 'amount', 'transaction_date']);
 
+    if ((float)$body['amount'] <= 0) {
+        respond_error(400, 'Amount must be greater than 0');
+    }
+
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
         'WITH row AS (
@@ -193,6 +197,26 @@ function select_transactions(PDO $db, int $user_id, array $params): array {
  */
 function create_budget(PDO $db, int $user_id, array $body): array|false {
     require_fields($body, ['category_id', 'duration_id', 'amount', 'budget_start']);
+
+    if ((float)$body['amount'] <= 0) {
+        respond_error(400, 'Amount must be greater than 0');
+    }
+
+    $overlap_check = $db->prepare(
+        "SELECT id FROM budgets
+         WHERE user_id = :user_id AND category_id = :category_id
+            AND budget_start <= COALESCE(:budget_end, 'infinity'::date)
+            AND COALESCE(budget_end, 'infinity'::date) >= :budget_start"
+    );
+    $overlap_check->execute([
+        'user_id'     => $user_id,
+        'category_id' => $body['category_id'],
+        'budget_start' => $body['budget_start'],
+        'budget_end'  => $body['budget_end'] ?? null,
+    ]);
+    if ($overlap_check->fetch()) {
+        respond_error(409, 'A budget for this category already exists in this date range');
+    }
 
     $body['user_id'] = $user_id;
     $statement = $db->prepare(
