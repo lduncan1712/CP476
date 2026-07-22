@@ -11,12 +11,33 @@ export default function AddTransaction({onAdd}) {
     const [category, setCategory] = useState("");
     const [entities, setEntities] = useState([])
     const categories = useCategories();
-
+    //added this line 
+    const todayStr = new Date().toISOString().split("T")[0];
     useEffect(() => {
         api('/entities').then(setEntities)
     }, [])
 
     const submitTransaction = async () => {
+
+            // --- Date validation: block future-dated transactions ---
+        if (!date) {
+            window.alert("Please select a date.")
+            return;
+        }
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const selectedDate = new Date(date + "T00:00:00");
+        if (isNaN(selectedDate.getTime())) {
+            window.alert("Please select a valid date.")
+            return;
+        }
+
+        if (selectedDate > today) {
+            window.alert("Transaction date cannot be in the future.")
+            return;
+        }
         let entityId;
         if (selectedEntity === "ADD_NEW_ENTITY") {
             entityId = await createEntity();
